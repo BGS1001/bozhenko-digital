@@ -188,12 +188,18 @@
         body: JSON.stringify({ ...data, _subject: `Video order: ${data.package_label}`, _template: "table", _captcha: "false", message: text })
       });
       const out = await res.json().catch(() => ({}));
-      if (!res.ok || String(out.success) === "false") throw new Error(out.message || res.status);
+      if (!res.ok || String(out.success) === "false") throw new Error(out.message || ("HTTP " + res.status));
       status.innerHTML = `<div class="msg msg--ok"><b>Got it — thank you!</b> We'll message you on WhatsApp or email shortly to confirm details and collect your materials.</div>`;
       form.querySelectorAll("input:not([type=radio])").forEach(i => { if (i.type === "checkbox") i.checked = false; else i.value = ""; });
     } catch (err) {
+      if (err instanceof TypeError) err = new Error("network or browser blocked the request");
       console.warn("Order form error:", err);
-      status.innerHTML = `<div class="msg msg--err"><b>Sorry, that didn't go through.</b> Please try again${S.whatsapp || S.email ? " or send it directly:" : "."}${altLinks(text)}</div>`;
+      const reason = String(err && err.message || "");
+      if (/activat/i.test(reason)) {
+        status.innerHTML = `<div class="msg msg--err"><b>Almost there:</b> this order form needs a one-time activation by the site owner. Please send your order directly for now:${altLinks(text)}</div>`;
+        return;
+      }
+      status.innerHTML = `<div class="msg msg--err"><b>Sorry, that didn't go through.</b>${reason && !/^\d+$/.test(reason) ? ` <small>(${esc(reason)})</small>` : ""} Please try again${S.whatsapp || S.email ? " or send it directly:" : "."}${altLinks(text)}</div>`;
     } finally { btn.disabled = false; btn.innerHTML = label; updateTotal(); }
   });
 
