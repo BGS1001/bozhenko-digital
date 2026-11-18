@@ -11,7 +11,7 @@
   /* ---------- Plans (prices section) ---------- */
   $("[data-plans]").innerHTML = pkgs.map(p => `
     <article class="plan rv ${p.featured ? "plan--featured" : ""}">
-      ${p.featured ? '<span class="plan__flag">Best deal</span>' : ""}
+      ${p.featured ? '<span class="plan__flag">Black Friday pick</span>' : ""}
       <h3>${esc(p.name)}</h3>
       <p class="plan__note">${esc(p.note)}</p>
       <div class="plan__price"><b>${eur(p.price)}</b><s>${eur(p.was)}</s></div>
@@ -189,7 +189,7 @@
       });
       const out = await res.json().catch(() => ({}));
       if (!res.ok || String(out.success) === "false") throw new Error(out.message || ("HTTP " + res.status));
-      status.innerHTML = `<div class="msg msg--ok"><b>Got it — thank you!</b> We'll message you on WhatsApp or email shortly to confirm details and collect your materials.</div>`;
+      status.innerHTML = `<div class="msg msg--ok"><b>Thank you, we’ve got your order.</b> We’ll be in touch on WhatsApp or email shortly to confirm the details.</div>`;
       form.querySelectorAll("input:not([type=radio])").forEach(i => { if (i.type === "checkbox") i.checked = false; else i.value = ""; });
     } catch (err) {
       if (err instanceof TypeError) err = new Error("network or browser blocked the request");
