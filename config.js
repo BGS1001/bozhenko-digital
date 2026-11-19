@@ -38,23 +38,20 @@ window.SITE = {
     { id: "landing", name: "Business landing page",   text: "A fast, focused one-page site built to turn ad clicks into enquiries." }
   ],
 
-  /* --- Work examples (up to 6) ---
-     Put video files in assets/work/. "poster" is a still frame shown before play.
-     An entry without "video" shows as a tidy "new example soon" card. */
+  /* --- Work examples ---
+     The first example with a "video" plays in the hero and in "Our work".
+     video   : full ad with sound (opens when visitors tap play)
+     preview : small silent loop for the hero (keeps the page light on mobile data)
+     poster  : still frame shown before play (.webp or .jpg) */
   work: [
     {
       title: "Party Balloon — Birthday setups",
-      tag: "Black Friday promo",
-      format: "9:16 Reel",
       video: "assets/work/partyballoon-blackfriday-9x16.mp4",
-      poster: "assets/work/partyballoon-blackfriday-9x16.jpg",
-      price: 47, was: 120,
-      made: "Built from existing clips & photos" // optional one-liner, e.g. what materials it was made from
-    },
-    { title: "", tag: "Product ad", format: "9:16 Reel" },
-    { title: "", tag: "Service business", format: "9:16 Reel" },
-    { title: "", tag: "Christmas sale", format: "9:16 Reel" },
-    { title: "", tag: "Restaurant / café", format: "4:5 Feed ad" },
-    { title: "", tag: "Beauty & salon", format: "9:16 Reel" }
-  ]
+      preview: "assets/work/partyballoon-preview.mp4",
+      poster: "assets/work/partyballoon-poster.webp"
+    }
+  ],
+
+  /* --- Public site address (used for Google/social previews) --- */
+  siteUrl: "https://bozhenko-digital.vercel.app"
 };
