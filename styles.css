@@ -78,24 +78,32 @@ html:has(dialog[open]){overflow:hidden}
 
 
 /* Ticker */
-.ticker{position:relative;background:var(--band);color:var(--band-fg);overflow:hidden}
+/* Classic Black Friday bar: black with gold, in both looks. Kept slim and
+   outlined so the header's solid "Order a video" stays the main button. */
+.ticker{--tk-bg:#0B0B0C;--gold:#E2B85A;--gold-hi:#F6DC8E;position:relative;background:var(--tk-bg);color:#E9E4D6;overflow:hidden;
+  border-bottom:1px solid rgba(226,184,90,.55);box-shadow:inset 0 1px 0 rgba(246,220,142,.18)}
 .ticker__track{all:unset;cursor:pointer;display:flex;width:max-content;animation:tick 34s linear infinite}
 .ticker:hover .ticker__track,.ticker:focus-within .ticker__track,.ticker.is-paused .ticker__track{animation-play-state:paused}
 .ticker__pause{position:absolute;z-index:2;right:0;top:50%;transform:translateY(-50%);width:44px;height:100%;border:0;cursor:pointer;
-  background:linear-gradient(90deg,transparent,var(--band) 35%);color:var(--band-hi);display:grid;place-items:center;padding:0 0 0 10px}
+  background:linear-gradient(90deg,transparent,var(--tk-bg) 35%);color:var(--gold);display:grid;place-items:center;padding:0 0 0 10px}
 .ticker__pause svg{width:14px;height:14px}
 .ticker__pause .i-play,.ticker.is-paused .ticker__pause .i-pause{display:none}
 .ticker.is-paused .ticker__pause .i-play{display:block}
-.ticker__set{display:flex;gap:28px;padding:10px 14px;white-space:nowrap;font:600 13px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;align-items:center}
-.ticker__set b{color:var(--band-hi)}
-.ticker__set em{font-style:normal;color:#F2C46B}
-[data-look="creative"] .ticker__set em{color:var(--accent)}
-.ticker__set s{opacity:.85}
-.ticker__go{background:var(--accent);color:var(--accent-fg);padding:5px 11px;border-radius:99px}
+.ticker__set{display:flex;gap:18px;padding:10px 9px;white-space:nowrap;font:600 13px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;align-items:center}
+.ticker__set b{font-weight:800;letter-spacing:.16em;color:var(--gold-hi);
+  background:linear-gradient(100deg,#C9962E 0%,#F6DC8E 35%,#FFF4CF 50%,#F6DC8E 65%,#C9962E 100%);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldshine 4.5s linear infinite}
+@keyframes goldshine{to{background-position:-200% 0}}
+.ticker__set>span:not(.ticker__go)::before,.ticker__go::before{content:"✦";color:var(--gold);margin-right:18px;font-size:10px;vertical-align:1px}
+.ticker__go::before{content:none}
+.ticker__set em{font-style:normal;font-weight:800;color:var(--gold-hi)}
+.ticker__set s{color:#B9B3A4}
+.ticker__go{color:var(--gold-hi);padding:4px 11px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--gold)}
+.ticker__track:hover .ticker__go{background:var(--gold);color:#0B0B0C}
 .ticker__cd:empty{display:none}
 @keyframes tick{to{transform:translateX(-50%)}}
 .sprockets{display:none}
-[data-look="creative"] .sprockets{display:block;height:9px;background:radial-gradient(circle at 8px 4.5px,#2A35E8 2.6px,transparent 3px) 0 0/18px 9px repeat-x}
+[data-look="creative"] .sprockets{display:block;height:9px;background:radial-gradient(circle at 8px 4.5px,rgba(226,184,90,.55) 2.4px,transparent 2.9px) 0 0/18px 9px repeat-x}
 [data-look="creative"] .ticker{padding-block:2px}
 
 /* Header */
@@ -326,14 +334,20 @@ section{padding-block:clamp(60px,8vw,104px)}
 .spark{position:fixed;z-index:56;width:8px;height:8px;pointer-events:none;border-radius:50%;background:#FFD43B;box-shadow:0 0 10px 2px rgba(255,212,59,.8)}
 @media (max-width:560px){.magic{padding:10px 14px 10px 12px;font-size:15px}}
 
-/* Magic transition */
-#site{transition:filter .6s ease,transform .6s ease}
-html.is-casting #site{filter:blur(14px) saturate(1.4);transform:scale(1.015)}
+/* Magic transition: translucent, grainy fog drifts across while the site
+   visibly recolours underneath. Only transform/opacity animate (GPU-cheap),
+   no big blur filters, so it stays smooth on phones. */
 .smoke{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;overflow:hidden}
-html.is-casting .smoke{opacity:1;transition:opacity .35s ease}
-html.is-clearing .smoke{opacity:0;transition:opacity .9s ease}
-.smoke i{position:absolute;border-radius:50%;filter:blur(40px);opacity:.85;transform:translate(-50%,-50%) scale(.2);animation:puff 1.6s cubic-bezier(.2,.7,.3,1) forwards}
-@keyframes puff{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}25%{opacity:.9}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(var(--s));opacity:.75}}
+html.is-casting .smoke{opacity:1;transition:opacity .3s ease}
+html.is-clearing .smoke{opacity:0;transition:opacity .8s ease}
+.smoke i{position:absolute;left:0;top:0;border-radius:50%;opacity:0;will-change:transform,opacity;
+  transform:translate(var(--x0),var(--y0)) scale(.3);animation:puff var(--d,1.7s) cubic-bezier(.25,.7,.3,1) forwards}
+@keyframes puff{0%{opacity:0;transform:translate(var(--x0),var(--y0)) scale(.3)}
+  30%{opacity:var(--o,.55)}
+  100%{opacity:calc(var(--o,.55) * .7);transform:translate(var(--x1),var(--y1)) scale(var(--s))}}
+.smoke b{position:absolute;inset:-64px;opacity:.5;background-size:128px 128px;animation:grain .5s steps(4) infinite}
+html.is-morphing :is(body,.ticker,.top,.nav,.hero,.offer,.tag,.btn,.strip,section,.steps li,.plan,.xcard,.who__grid div,.formats li,.reelcard__tag,.close__box,.footer,.cap,.phone,.eyebrow,h1 i,.after){
+  transition:background-color .7s ease,color .7s ease,border-color .7s ease,box-shadow .7s ease,transform .7s ease!important}
 .letterbox{position:fixed;inset:0;z-index:91;pointer-events:none}
 .letterbox i{position:absolute;left:0;right:0;height:0;background:#000;transition:height .45s ease}
 .letterbox i:first-child{top:0}.letterbox i:last-child{bottom:0}
@@ -403,7 +417,7 @@ legend{font-weight:700;margin-bottom:10px;padding:0}
 .lightbox video{width:100%;max-height:90dvh;border-radius:16px}
 
 @media (prefers-reduced-motion:reduce){
-  .ticker__track,.clapper__top,.spot,.grain,.rec i,.magic,.magic__wand{animation:none!important}
+  .ticker__track,.ticker__set b,.clapper__top,.spot,.grain,.rec i,.magic,.magic__wand{animation:none!important}
   .magic{transition:none}
   #site{transition:none}
   .smoke i{animation:none;display:none}

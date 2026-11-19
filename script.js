@@ -277,17 +277,35 @@
         { duration: 700 + Math.random() * 400, easing: "cubic-bezier(.2,.7,.3,1)" }).onfinish = () => s.remove();
     }
   };
+  /* fine film grain, drawn once into a small tile */
+  let grainUrl = "";
+  const grainTile = () => {
+    if (grainUrl) return grainUrl;
+    try {
+      const c = document.createElement("canvas"); c.width = c.height = 128;
+      const g = c.getContext("2d"), d = g.createImageData(128, 128);
+      for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = Math.random() * 70; }
+      g.putImageData(d, 0, 0); grainUrl = c.toDataURL();
+    } catch {}
+    return grainUrl;
+  };
   const puffs = (x, y, toCreative) => {
     smoke.innerHTML = "";
-    const cols = toCreative ? ["#ffffff", "#E9E4FF", "#FFD9EC", "#FFF3C4", "#C9CCFF"] : ["#ffffff", "#DCE8E2", "#ECEEE8", "#C9DAD2", "#F3E6C8"];
-    const n = innerWidth < 560 ? 12 : 18;
+    /* tinted, see-through fog so the site stays visible while it changes */
+    const cols = toCreative ? ["255,255,255", "201,204,255", "255,154,203", "255,212,59", "140,123,255"]
+                            : ["255,255,255", "201,218,210", "215,157,50", "236,238,232", "31,94,78"];
+    const W = innerWidth, H = innerHeight, small = W < 560, n = small ? 9 : 14;
     for (let i = 0; i < n; i++) {
-      const p = document.createElement("i");
-      const sz = 160 + Math.random() * 220;
-      p.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:radial-gradient(circle,${cols[i % cols.length]} 0%,transparent 70%);` +
-        `--dx:${(Math.random() - .75) * innerWidth * 1.2}px;--dy:${(Math.random() - .5) * innerHeight * 1.3}px;--s:${3 + Math.random() * 5};animation-delay:${i * 18}ms`;
+      const p = document.createElement("i"), sz = (small ? 150 : 220) + Math.random() * (small ? 120 : 200);
+      const c = cols[i % cols.length], o = .35 + Math.random() * .25;
+      /* puffs start at the wand and roll out across the screen */
+      const tx = W * (.05 + Math.random() * .9), ty = H * (.05 + Math.random() * .9);
+      p.style.cssText = `width:${sz}px;height:${sz}px;background:radial-gradient(circle,rgba(${c},.9) 0%,rgba(${c},.45) 38%,rgba(${c},0) 70%);` +
+        `--x0:${x - sz / 2}px;--y0:${y - sz / 2}px;--x1:${tx - sz / 2}px;--y1:${ty - sz / 2}px;--s:${1.6 + Math.random() * 1.6};--o:${o};--d:${1.4 + Math.random() * .6}s;animation-delay:${i * 35}ms`;
       smoke.appendChild(p);
     }
+    const g = document.createElement("b"); const url = grainTile(); if (url) g.style.backgroundImage = `url(${url})`;
+    smoke.appendChild(g);
   };
   magic.addEventListener("click", () => {
     if (busy) return;
@@ -302,9 +320,10 @@
     if (reduced) { swap(); return; }
     busy = true;
     sparks(x, y); puffs(x, y, toCreative);
-    root.classList.add("is-casting");
-    setTimeout(swap, 760);
-    setTimeout(() => { root.classList.remove("is-casting"); root.classList.add("is-clearing"); }, 1050);
-    setTimeout(() => { root.classList.remove("is-clearing"); smoke.innerHTML = ""; busy = false; }, 2200);
+    root.classList.add("is-casting", "is-morphing");
+    /* the colours change while the fog is still thin, so you watch the site transform */
+    setTimeout(swap, 420);
+    setTimeout(() => { root.classList.remove("is-casting"); root.classList.add("is-clearing"); }, 1250);
+    setTimeout(() => { root.classList.remove("is-clearing", "is-morphing"); smoke.innerHTML = ""; busy = false; }, 2150);
   });
 })();
