@@ -47,8 +47,20 @@
   const phone = $("[data-hero-video]");
   if (heroIdx > -1) {
     const h = work[heroIdx];
-    phone.innerHTML = `<video ${reduced ? "" : "autoplay"} muted loop playsinline preload="metadata" ${h.poster ? `poster="${esc(h.poster)}"` : ""} src="${esc(h.video)}"></video>
+    phone.innerHTML = `<video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" ${h.poster ? `poster="${esc(h.poster)}"` : ""}></video>
       <button class="vbtn" type="button" data-play="${heroIdx}">▶ Watch with sound</button>`;
+    /* The silent loop only loads when the hero is on screen, never on data-saver
+       or reduced-motion, and pauses when scrolled away (saves data and battery). */
+    const hv = $("video", phone);
+    const saveData = navigator.connection && navigator.connection.saveData;
+    if (!reduced && !saveData && "IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => {
+        if (en.isIntersecting) {
+          if (!hv.src) hv.src = h.preview || h.video;
+          hv.play().catch(() => {});
+        } else if (hv.src) hv.pause();
+      }, { threshold: .25 }).observe(phone);
+    }
   }
 
   /* ---------- Lightbox ---------- */
@@ -58,15 +70,25 @@
     if (!b) return;
     const w = work[+b.dataset.play];
     if (!w?.video) return;
-    lbv.src = w.video; if (w.poster) lbv.poster = w.poster;
+    if (w.poster) lbv.poster = w.poster; lbv.src = w.video;
     lb.showModal(); lbv.muted = false; lbv.play().catch(() => {});
   });
   lb.addEventListener("close", () => { lbv.pause(); lbv.removeAttribute("src"); lbv.load(); });
+
+  /* ---------- Ticker pause (moving content must be stoppable) ---------- */
+  const tk = $("[data-ticker]"), tkp = $("[data-ticker-pause]");
+  const setPaused = on => {
+    tk.classList.toggle("is-paused", on); tkp.setAttribute("aria-pressed", String(on));
+    tkp.setAttribute("aria-label", on ? "Play the scrolling offer" : "Pause the scrolling offer");
+  };
+  tkp.addEventListener("click", () => { const on = !tk.classList.contains("is-paused"); setPaused(on); store.set("bd_ticker_paused", on ? "1" : ""); });
+  if (store.get("bd_ticker_paused") === "1") setPaused(true);
 
   /* ---------- Nav ---------- */
   const nav = $("#nav"), burger = $(".burger");
   const closeNav = () => { nav.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); };
   burger.addEventListener("click", () => burger.setAttribute("aria-expanded", String(nav.classList.toggle("open"))));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("open")) { closeNav(); burger.focus(); } });
   $$("a", nav).forEach(a => a.addEventListener("click", closeNav));
 
   /* ---------- Modals ---------- */
@@ -92,7 +114,11 @@
     if (e.target.closest("[data-close]")) e.target.closest("dialog").close();
   });
   [order, quote, lb].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
-  oform.date.min = new Date().toISOString().slice(0, 10);
+  [order, quote].forEach(d => d.addEventListener("close", () => {
+    const f = $("form", d); if (f.classList.contains("is-sent")) { f.classList.remove("is-sent"); $("[data-status]", f).innerHTML = ""; }
+  }));
+  const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+  oform.date.min = today.toISOString().slice(0, 10);
 
   /* ---------- Validation & sending ---------- */
   const rules = {
@@ -100,11 +126,13 @@
     email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || "Enter a valid email address",
     business: v => v.length > 2 || "Add your website or social page so we can see your business"
   };
+  let errId = 0;
   const setErr = (el, msg) => {
-    el.setAttribute("aria-invalid", msg ? "true" : "false");
     let n = el.parentElement.querySelector(".f__err");
-    if (msg) { if (!n) { n = document.createElement("span"); n.className = "f__err"; el.after(n); } n.textContent = msg; }
-    else n?.remove();
+    if (msg) {
+      if (!n) { n = document.createElement("span"); n.className = "f__err"; n.id = "err" + (++errId); el.after(n); }
+      n.textContent = msg; el.setAttribute("aria-invalid", "true"); el.setAttribute("aria-describedby", n.id);
+    } else { n?.remove(); el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); }
   };
   const altLinks = (text, subject) => {
     const a = [];
@@ -142,7 +170,8 @@
         });
         const out = await res.json().catch(() => ({}));
         if (!res.ok || String(out.success) === "false") throw new Error(out.message || ("HTTP " + res.status));
-        status.innerHTML = `<div class="msg msg--ok">${ok}</div>`;
+        status.innerHTML = `<div class="msg msg--ok" tabindex="-1">${ok}<div class="msg__alts"><button class="btn btn--sm" type="button" data-close>Close</button></div></div>`;
+        form.classList.add("is-sent"); $(".msg", status).focus();
         form.querySelectorAll("input:not([type=radio]),textarea").forEach(i => { if (i.type === "checkbox") i.checked = false; else i.value = ""; });
       } catch (err) {
         const reason = err instanceof TypeError ? "network or browser blocked the request" : String(err?.message || "");
@@ -178,7 +207,7 @@
   const tick = () => {
     if (!end) { cds.forEach(n => n.textContent = ""); return; }
     const ms = end - new Date();
-    const t = ms <= 0 ? "Offer ended" : `${Math.floor(ms / 864e5)}d ${Math.floor(ms / 36e5 % 24)}h ${Math.floor(ms / 6e4 % 60)}m left`;
+    const t = ms <= 0 ? "" : `${Math.floor(ms / 864e5)}d ${Math.floor(ms / 36e5 % 24)}h ${Math.floor(ms / 6e4 % 60)}m left`;
     cds.forEach(n => n.textContent = t);
   };
   tick(); setInterval(tick, 30000);
@@ -196,9 +225,23 @@
   const wa = $("[data-wa-float]");
   if (S.whatsapp) wa.href = `https://wa.me/${S.whatsapp}`;
 
+  /* ---------- Structured data for Google (built from config.js) ---------- */
+  const ld = {
+    "@context": "https://schema.org", "@type": "ProfessionalService", name: "Bozhenko Digital",
+    description: "Short ad videos for Instagram, TikTok and Facebook, made from a business's existing reviews, photos and clips.",
+    url: (S.siteUrl || location.origin) + "/", image: (S.siteUrl || location.origin) + "/assets/og.jpg",
+    address: { "@type": "PostalAddress", addressLocality: "Limerick", addressCountry: "IE" },
+    areaServed: { "@type": "Country", name: "Ireland" }, priceRange: pkgs.length ? `€${Math.min(...pkgs.map(p => p.price))}–€${Math.max(...pkgs.map(p => p.price))}` : undefined,
+    ...(S.email && { email: S.email }), ...(S.whatsapp && { telephone: "+" + S.whatsapp }),
+    makesOffer: pkgs.map(p => ({ "@type": "Offer", name: p.name, description: p.note, price: p.price, priceCurrency: "EUR",
+      ...(S.offerEnds && { priceValidUntil: S.offerEnds.slice(0, 10) }) }))
+  };
+  const lds = document.createElement("script"); lds.type = "application/ld+json"; lds.textContent = JSON.stringify(ld);
+  document.head.appendChild(lds);
+
   /* ---------- Cookie notice ---------- */
   const ck = $("[data-cookie]");
-  const showWa = () => { if (S.whatsapp) wa.hidden = !ck.hidden; };
+  const showWa = () => { wa.hidden = !S.whatsapp; };
   if (!store.get("bd_cookie_choice")) ck.hidden = false;
   showWa();
   $$("[data-cookie-choice]").forEach(b => b.addEventListener("click", () => {
