@@ -21,12 +21,21 @@ window.SITE = {
 
   /* --- Black Friday offer --- */
   offerEnds: "2026-11-30T23:59:00", // countdown target; set "" to hide the countdown
-  popupDelaySeconds: 7,             // offer pop-up opens once per visit after N seconds; 0 = never auto-open
-
+  
   packages: [
     { id: "single", name: "1 ad video", note: "Built from your existing photos, clips & reviews", price: 47, was: 120, featured: true },
     { id: "pack4",  name: "4 Reels pack", note: "For your key holidays & sales", price: 130, was: 250 },
     { id: "pack8",  name: "8 Reels pack", note: "Every key date covered", price: 220, was: 450 }
+  ],
+
+  /* --- Extra services (each gets a "Request a quote" button) --- */
+  extras: [
+    { id: "shoot",   name: "Video & photo shoot",     text: "Would you like fresh footage as well? We can arrange a video or photo shoot for your business, priced to the job." },
+    { id: "meta",    name: "Meta ads management",     text: "Facebook & Instagram campaign setup, targeting and ongoing optimisation." },
+    { id: "google",  name: "Google Ads & Maps",       text: "Search and local campaigns that put you in front of nearby customers." },
+    { id: "gbp",     name: "Google Business Profile", text: "Setup and optimisation, so you show up properly on Google Search and Maps." },
+    { id: "tiktok",  name: "TikTok ads",              text: "Campaign setup and management built around short-form video." },
+    { id: "landing", name: "Business landing page",   text: "A fast, focused one-page site built to turn ad clicks into enquiries." }
   ],
 
   /* --- Work examples (up to 6) ---
