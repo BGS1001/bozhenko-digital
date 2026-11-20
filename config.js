@@ -23,8 +23,8 @@ window.SITE = {
   offerEnds: "2026-11-30T23:59:00", // countdown target; set "" to hide the countdown
   
   packages: [
-    { id: "single", name: "1 ad video", note: "Built from your existing photos, clips & reviews", price: 33, was: 99, featured: true },
-    { id: "pack4",  name: "4 business Reels", note: "For your key holidays & sales", price: 98, was: 275 },
+    { id: "single", name: "1 ad video", note: "Built from your existing photos, clips & reviews", price: 33, was: 99 },
+    { id: "pack4",  name: "4 business Reels", note: "For your key holidays & sales", price: 98, was: 275, featured: true },
     { id: "pack8",  name: "8 business Reels", note: "Every key date covered", price: 175, was: 400 }
   ],
 
