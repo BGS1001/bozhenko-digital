@@ -248,6 +248,19 @@ section{padding-block:clamp(60px,8vw,104px)}
 .card[data-pos="0"]:hover{filter:brightness(1.04)}
 [data-look="creative"] .card{border-color:#120F2E;box-shadow:10px 10px 0 #120F2E}
 [data-look="creative"] .card[data-pos="0"]{transform:rotate(2deg)}
+/* blinking pointing hands on the back cards: "tap me" */
+.card__hand{position:absolute;z-index:3;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);pointer-events:none;opacity:0;
+  box-shadow:0 0 0 0 rgba(255,255,255,.7),0 4px 12px rgba(0,0,0,.35)}
+.card__hand svg{width:24px;height:24px;fill:none;stroke:#16211D;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card__hand--a{top:12px}.card__hand--b{bottom:14px}
+.card[data-pos="1"] .card__hand{right:10px}
+.card[data-pos="2"] .card__hand{left:10px}
+.card[data-pos="2"] .card__hand svg{transform:scaleX(-1)}
+.card[data-pos="1"] .card__hand,.card[data-pos="2"] .card__hand{animation:tapme 1.6s ease-in-out infinite}
+.card__hand--b{animation-delay:.8s!important}
+@keyframes tapme{0%,100%{opacity:.3;transform:scale(.92);box-shadow:0 0 0 0 rgba(255,255,255,.7),0 4px 12px rgba(0,0,0,.35)}45%{opacity:1;transform:scale(1.08)}60%{opacity:1;transform:scale(.96);box-shadow:0 0 0 12px rgba(255,255,255,0),0 4px 12px rgba(0,0,0,.35)}}
+[data-look="creative"] .card__hand{background:#FFD43B}
+[data-look="creative"] .card__hand svg{stroke:#120F2E}
 .deck .rec{left:50%;top:34px;transform:translateX(-50%);z-index:6}
 [data-look="creative"] .deck .rec{transform:translateX(-50%) rotate(2deg)}
 .deck__bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px;padding-inline:10px}
@@ -507,6 +520,7 @@ legend{font-weight:700;margin-bottom:10px;padding:0}
 @media (prefers-reduced-motion:reduce){
   .ticker__track,.ticker__set b,.clapper__top,.spot,.grain,.rec i,.magic,.magic__wand{animation:none!important}
   .card,.card video,.frame__pic img{transition:none}
+  .card[data-pos="1"] .card__hand,.card[data-pos="2"] .card__hand{animation:none;opacity:.9}
   .magic{transition:none}
   #site{transition:none}
   .smoke i{animation:none;display:none}
