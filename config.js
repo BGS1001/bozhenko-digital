@@ -53,5 +53,5 @@ window.SITE = {
   ],
 
   /* --- Public site address (used for Google/social previews) --- */
-  siteUrl: "https://bozhenko-digital.vercel.app"
+  siteUrl: "https://www.bozhenkodigital.ie"
 };
