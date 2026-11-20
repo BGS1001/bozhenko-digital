@@ -28,14 +28,14 @@ window.SITE = {
     { id: "pack8",  name: "8 business Reels", note: "Every key date covered", price: 175, was: 400 }
   ],
 
-  /* --- Extra services (each gets a "Request a quote" button) --- */
+  /* --- Extra services (each gets a "Request a quote" button; featured: true = highlighted card) --- */
   extras: [
+    { id: "landing", name: "Websites for every business", featured: true, text: "From a simple one-page site to a full shop or booking site: fast, easy to use on a phone and built to bring in enquiries. Cafés, trades, salons, shops, and personal projects too." },
     { id: "shoot",   name: "Video & photo shoot",     text: "Would you like fresh footage as well? We can arrange a video or photo shoot for your business, priced to the job." },
     { id: "meta",    name: "Meta ads management",     text: "Facebook & Instagram campaign setup, targeting and ongoing optimisation." },
     { id: "google",  name: "Google Ads & Maps",       text: "Search and local campaigns that put you in front of nearby customers." },
     { id: "gbp",     name: "Google Business Profile", text: "Setup and optimisation, so you show up properly on Google Search and Maps." },
-    { id: "tiktok",  name: "TikTok ads",              text: "Campaign setup and management built around short-form video." },
-    { id: "landing", name: "Business landing page",   text: "A fast, focused one-page site built to turn ad clicks into enquiries." }
+    { id: "tiktok",  name: "TikTok ads",              text: "Campaign setup and management built around short-form video." }
   ],
 
   /* --- Our work ---

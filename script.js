@@ -34,9 +34,9 @@
 
   /* ---------- Extras ---------- */
   $("[data-extras]").innerHTML = extras.map(x => `
-    <article class="xcard ${x.id === "shoot" ? "xcard--shoot" : ""}">
+    <article class="xcard ${x.featured ? "xcard--main" : ""}">
       <h3>${esc(x.name)}</h3><p>${esc(x.text)}</p>
-      <button class="btn btn--sm ${x.id === "shoot" ? "" : "btn--soft"}" type="button" data-quote="${esc(x.id)}">Request a quote</button>
+      <button class="btn btn--sm ${x.featured ? "" : "btn--soft"}" type="button" data-quote="${esc(x.id)}">Request a quote</button>
     </article>`).join("");
   $("[data-service-select]").innerHTML = extras.map(x => `<option value="${esc(x.name)}" data-id="${esc(x.id)}">${esc(x.name)}</option>`).join("") +
     '<option value="Something else">Something else</option>';
@@ -393,7 +393,7 @@
       const s = document.createElement("span"); s.className = "spark";
       const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 90;
       s.style.left = x + "px"; s.style.top = y + "px";
-      s.style.background = ["#FFD43B", "#FF9ACB", "#8C7BFF", "#ffffff"][i % 4];
+      s.style.background = ["#E9BE5A", "#E4646B", "#C8323C", "#ffffff"][i % 4];
       document.body.appendChild(s);
       s.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
         { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(.2)`, opacity: 0 }],
@@ -415,7 +415,7 @@
   const puffs = (x, y, toCreative) => {
     smoke.innerHTML = "";
     /* tinted, see-through fog so the site stays visible while it changes */
-    const cols = toCreative ? ["255,255,255", "201,204,255", "255,154,203", "255,212,59", "140,123,255"]
+    const cols = toCreative ? ["255,255,255", "207,227,214", "228,100,107", "233,190,90", "200,50,60"]
                             : ["255,255,255", "201,218,210", "215,157,50", "236,238,232", "31,94,78"];
     const W = innerWidth, H = innerHeight, small = W < 560, n = small ? 9 : 14;
     for (let i = 0; i < n; i++) {
@@ -437,8 +437,8 @@
     const swap = () => {
       root.dataset.look = toCreative ? "creative" : "irish";
       magic.setAttribute("aria-pressed", String(toCreative));
-      magic.title = toCreative ? "Back to the calm look" : "Switch the site to our creative studio look";
-      meta.setAttribute("content", toCreative ? "#2A35E8" : "#14463A");
+      magic.title = toCreative ? "Back to the everyday look" : "Switch the site to our Christmas studio look";
+      meta.setAttribute("content", toCreative ? "#12402F" : "#14463A");
     };
     if (reduced) { swap(); return; }
     busy = true;
