@@ -17,7 +17,7 @@
   /* ---------- Prices ---------- */
   $("[data-plans]").innerHTML = pkgs.map(p => `
     <article class="plan ${p.featured ? "plan--main" : ""}">
-      ${p.featured ? '<span class="ribbon">Most chosen</span>' : ""}
+      ${p.featured ? '<span class="ribbon">Our pick</span>' : ""}
       <h3>${esc(p.name)}</h3>
       <div class="plan__p">${eur(p.price)}<s>${eur(p.was)}</s></div>
       <p>${esc(p.note)}</p>
