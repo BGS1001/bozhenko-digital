@@ -110,6 +110,13 @@
     const f = $(".frame", reel), step = f ? f.getBoundingClientRect().width * 2 : 400;
     reel.scrollBy({ left: +b.dataset.reelStep * step, behavior: reduced ? "auto" : "smooth" });
   }));
+  /* hide an arrow when the film is already at that end */
+  const ends = () => {
+    const max = reel.scrollWidth - reel.clientWidth - 4;
+    $$("[data-reel-step]").forEach(b => { b.disabled = +b.dataset.reelStep < 0 ? reel.scrollLeft <= 4 : reel.scrollLeft >= max; });
+  };
+  reel.addEventListener("scroll", () => requestAnimationFrame(ends), { passive: true });
+  addEventListener("resize", ends); ends();
   /* drag the film along with a mouse */
   let drag = null, dragged = false;
   reel.addEventListener("pointerdown", e => { if (e.pointerType === "mouse" && e.button === 0) { drag = { x: e.clientX, l: reel.scrollLeft, moved: false }; dragged = false; } });
