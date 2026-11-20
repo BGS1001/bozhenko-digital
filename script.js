@@ -17,7 +17,7 @@
   /* ---------- Prices ---------- */
   $("[data-plans]").innerHTML = pkgs.map(p => `
     <article class="plan ${p.featured ? "plan--main" : ""}">
-      ${p.featured ? '<span class="ribbon">Most chosen</span>' : ""}
+      ${p.featured ? '<span class="ribbon">Our pick</span>' : ""}
       <h3>${esc(p.name)}</h3>
       <div class="plan__p">${eur(p.price)}<s>${eur(p.was)}</s></div>
       <p>${esc(p.note)}</p>
@@ -34,46 +34,168 @@
 
   /* ---------- Extras ---------- */
   $("[data-extras]").innerHTML = extras.map(x => `
-    <article class="xcard ${x.id === "shoot" ? "xcard--shoot" : ""}">
-      ${x.id === "shoot" ? '<span class="xcard__new">New</span>' : ""}
+    <article class="xcard ${x.featured ? "xcard--main" : ""}">
       <h3>${esc(x.name)}</h3><p>${esc(x.text)}</p>
-      <button class="btn btn--sm ${x.id === "shoot" ? "" : "btn--soft"}" type="button" data-quote="${esc(x.id)}">Request a quote</button>
+      <button class="btn btn--sm ${x.featured ? "" : "btn--soft"}" type="button" data-quote="${esc(x.id)}">Request a quote</button>
     </article>`).join("");
   $("[data-service-select]").innerHTML = extras.map(x => `<option value="${esc(x.name)}" data-id="${esc(x.id)}">${esc(x.name)}</option>`).join("") +
     '<option value="Something else">Something else</option>';
 
-  /* ---------- Hero video ---------- */
-  const heroIdx = work.findIndex(w => w && w.video);
-  const phone = $("[data-hero-video]");
-  if (heroIdx > -1) {
-    const h = work[heroIdx];
-    phone.innerHTML = `<video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" ${h.poster ? `poster="${esc(h.poster)}"` : ""}></video>
-      <button class="vbtn" type="button" data-play="${heroIdx}">▶ Watch with sound</button>`;
-    /* The silent loop only loads when the hero is on screen, never on data-saver
-       or reduced-motion, and pauses when scrolled away (saves data and battery). */
-    const hv = $("video", phone);
-    const saveData = navigator.connection && navigator.connection.saveData;
-    if (!reduced && !saveData && "IntersectionObserver" in window) {
-      new IntersectionObserver(([en]) => {
-        if (en.isIntersecting) {
-          if (!hv.src) hv.src = h.preview || h.video;
-          hv.play().catch(() => {});
-        } else if (hv.src) hv.pause();
-      }, { threshold: .25 }).observe(phone);
-    }
-  }
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  const label = w => [w.tag, w.place].filter(Boolean).join(" · ");
 
-  /* ---------- Lightbox ---------- */
-  const lb = $("#lightbox"), lbv = $("video", lb);
+  /* ---------- Hero: a fan of cards, dealt with the arrow ----------
+     Three cards show at once (front, right, left); any others wait behind.
+     The arrow, a swipe or a tap on a side card sends the front card round to
+     the back of the deck, like dealing from the top. Only the front card plays
+     its small silent loop, and only while the hero is on screen. */
+  const deckIdx = work.map((w, i) => (w.hero && w.video ? i : -1)).filter(i => i > -1);
+  const cardsEl = $("[data-deck-cards]"), capEl = $("[data-deck-cap]"), nextBtn = $("[data-deck-next]");
+  let stack = deckIdx.slice(), heroSeen = false, dealing = false;
+  cardsEl.innerHTML = deckIdx.map((i, n) => {
+    const w = work[i];
+    return `<div class="card" data-card="${i}" data-pos="${Math.min(n, 3)}">
+      <img src="${esc(w.poster)}" alt="" width="540" height="960" decoding="async" ${n === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+      <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <button class="card__hit" type="button" data-card-hit="${i}"><span class="sr"></span></button>
+      <span class="card__play" aria-hidden="true">▶ Watch with sound</span>
+      <span class="card__hand card__hand--a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span><span class="card__hand card__hand--b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
+    </div>`;
+  }).join("");
+  const cardOf = i => $(`[data-card="${i}"]`, cardsEl);
+  const layout = () => {
+    stack.forEach((i, pos) => {
+      const c = cardOf(i), w = work[i];
+      c.dataset.pos = Math.min(pos, 3);
+      const hit = $(".card__hit", c);
+      hit.tabIndex = pos < 3 ? 0 : -1;
+      $(".sr", hit).textContent = pos === 0 ? `Play the ${w.name} ad with sound` : `Bring the ${w.name} ad to the front`;
+      const v = $("video", c);
+      if (pos === 0 && heroSeen && !reduced && !saveData && !lb.open) {
+        if (!v.getAttribute("src") && w.preview) v.src = w.preview;
+        if (v.getAttribute("src")) v.play().then(() => c.classList.add("is-live")).catch(() => {});
+      } else { v.pause(); }
+    });
+    const f = work[stack[0]];
+    if (f) capEl.innerHTML = `<b>${esc(f.name)}</b><span>${esc(label(f))}</span>`;
+  };
+  const deal = () => {
+    if (dealing || stack.length < 2) return;
+    const top = stack[0], c = cardOf(top);
+    stack = stack.slice(1).concat(top);
+    if (reduced || !c.animate) { layout(); return; }
+    dealing = true;
+    /* lift the top card off to the side, then tuck it in at the back */
+    c.classList.add("is-dealt");
+    c.animate([{ transform: "translate(0,0) rotate(0)" }, { transform: "translate(-70%,-6%) rotate(-18deg)", offset: .45 },
+      { transform: "translate(-24%,2%) rotate(-7deg) scale(.86)" }], { duration: 600, easing: "cubic-bezier(.3,.7,.3,1)" });
+    setTimeout(() => { c.classList.remove("is-dealt"); layout(); }, 270);
+    setTimeout(() => { dealing = false; }, 620);
+  };
+
+  /* ---------- Our work: the film strip ---------- */
+  const reel = $("[data-reel]");
+  reel.innerHTML = work.map((w, i) => `
+    <li class="frame">
+      <p class="frame__title"><b>${esc(w.name)}</b><span>${esc(label(w))}</span></p>
+      <button class="frame__pic" type="button" data-play="${i}">
+        <img src="${esc(w.poster)}" alt="" loading="lazy" decoding="async" width="540" height="960">
+        <span class="frame__play" aria-hidden="true"></span>
+        <span class="sr">Play the ${esc(w.name)} ${esc(w.tag)} ad with sound</span>
+      </button>
+      <p class="frame__note">${esc(w.note)}</p>
+      <span class="frame__no" aria-hidden="true">${String(i + 1).padStart(2, "0")}${i % 2 ? "A" : ""} ▸</span>
+    </li>`).join("");
+  $$("[data-reel-step]").forEach(b => b.addEventListener("click", () => {
+    const f = $(".frame", reel), step = f ? f.getBoundingClientRect().width * 2 : 400;
+    reel.scrollBy({ left: +b.dataset.reelStep * step, behavior: reduced ? "auto" : "smooth" });
+  }));
+  /* hide an arrow when the film is already at that end */
+  const ends = () => {
+    const max = reel.scrollWidth - reel.clientWidth - 4;
+    $$("[data-reel-step]").forEach(b => { b.disabled = +b.dataset.reelStep < 0 ? reel.scrollLeft <= 4 : reel.scrollLeft >= max; });
+  };
+  reel.addEventListener("scroll", () => requestAnimationFrame(ends), { passive: true });
+  addEventListener("resize", ends); ends();
+  /* drag the film along with a mouse */
+  let drag = null, dragged = false;
+  reel.addEventListener("pointerdown", e => { if (e.pointerType === "mouse" && e.button === 0) { drag = { x: e.clientX, l: reel.scrollLeft, moved: false }; dragged = false; } });
+  addEventListener("pointermove", e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 6) { drag.moved = true; reel.classList.add("is-dragging"); }
+    if (drag.moved) reel.scrollLeft = drag.l - dx;
+  });
+  addEventListener("pointerup", () => { if (!drag) return; dragged = drag.moved; drag = null; reel.classList.remove("is-dragging"); });
+  reel.addEventListener("dragstart", e => e.preventDefault());
+
+  /* ---------- Cinema frame: the ad grows out of its card and plays ---------- */
+  const lb = $("#lightbox"), lbv = $("video", lb), screen = $("[data-cine-screen]");
+  let cur = -1;
+  const fill = i => {
+    const w = work[i]; cur = i;
+    $("[data-cine-tag]").textContent = label(w);
+    $("[data-cine-name]").textContent = w.name;
+    $("[data-cine-note]").textContent = w.note;
+    $("[data-cine-count]").textContent = `${i + 1} / ${work.length}`;
+    lbv.poster = w.poster || ""; lbv.src = w.video;
+    lbv.muted = false; lbv.play().catch(() => {});
+  };
+  function openCine(i, fromEl) {
+    if (!work[i]?.video) return;
+    $$("video", cardsEl).forEach(v => v.pause());
+    fill(i); lb.showModal();
+    if (reduced || !fromEl || !screen.animate) return;
+    const a = fromEl.getBoundingClientRect(), b = screen.getBoundingClientRect();
+    if (!a.width || !b.width) return;
+    screen.animate([
+      { transform: `translate(${a.left - b.left}px,${a.top - b.top}px) scale(${a.width / b.width},${a.height / b.height})` },
+      { transform: "none" }
+    ], { duration: 640, easing: "cubic-bezier(.2,.75,.2,1)" });
+    $$(".cine__tag,.cine__name,.cine__note,.cine__ctrl", lb).forEach((n, k) =>
+      n.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: 420, delay: 380 + k * 70, fill: "backwards", easing: "ease-out" }));
+  }
   document.addEventListener("click", e => {
     const b = e.target.closest("[data-play]");
     if (!b) return;
-    const w = work[+b.dataset.play];
-    if (!w?.video) return;
-    if (w.poster) lbv.poster = w.poster; lbv.src = w.video;
-    lb.showModal(); lbv.muted = false; lbv.play().catch(() => {});
+    if (dragged) { dragged = false; return; }
+    openCine(+b.dataset.play, b);
   });
-  lb.addEventListener("close", () => { lbv.pause(); lbv.removeAttribute("src"); lbv.load(); });
+  $$("[data-cine-step]").forEach(b => b.addEventListener("click", () => {
+    const n = (cur + +b.dataset.cineStep + work.length) % work.length;
+    if (reduced || !screen.animate) { fill(n); return; }
+    screen.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" }).onfinish = () => {
+      fill(n); screen.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280 });
+    };
+  }));
+  lb.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    if (e.target === lbv) return;
+    e.preventDefault(); $(`[data-cine-step="${e.key === "ArrowRight" ? 1 : -1}"]`, lb).click();
+  });
+  lb.addEventListener("close", () => { lbv.pause(); lbv.removeAttribute("src"); lbv.load(); layout(); });
+
+  /* hero wiring (needs the cinema frame above) */
+  if (deckIdx.length) {
+    layout();
+    nextBtn.hidden = deckIdx.length < 2;
+    nextBtn.addEventListener("click", deal);
+    cardsEl.addEventListener("click", e => {
+      const h = e.target.closest("[data-card-hit]"); if (!h) return;
+      const i = +h.dataset.cardHit, pos = stack.indexOf(i);
+      if (pos === 0) openCine(i, h.closest(".card"));
+      else { deal(); if (pos === 2) setTimeout(deal, 640); }
+    });
+    let sx = null;
+    cardsEl.addEventListener("touchstart", e => { sx = e.touches[0].clientX; }, { passive: true });
+    cardsEl.addEventListener("touchend", e => { if (sx !== null && Math.abs(e.changedTouches[0].clientX - sx) > 40) deal(); sx = null; });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => {
+        heroSeen = en.isIntersecting;
+        if (heroSeen) layout(); else $$("video", cardsEl).forEach(v => v.pause());
+      }, { threshold: .25 }).observe(cardsEl);
+    }
+  } else { $("[data-deck]").closest(".hero__media").hidden = true; }
 
   /* ---------- Ticker pause (moving content must be stoppable) ---------- */
   const tk = $("[data-ticker]"), tkp = $("[data-ticker-pause]");
@@ -113,7 +235,8 @@
     }
     if (e.target.closest("[data-close]")) e.target.closest("dialog").close();
   });
-  [order, quote, lb].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+  [order, quote].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+  lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("cine__stage")) lb.close(); });
   [order, quote].forEach(d => d.addEventListener("close", () => {
     const f = $("form", d); if (f.classList.contains("is-sent")) { f.classList.remove("is-sent"); $("[data-status]", f).innerHTML = ""; }
   }));
@@ -270,7 +393,7 @@
       const s = document.createElement("span"); s.className = "spark";
       const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 90;
       s.style.left = x + "px"; s.style.top = y + "px";
-      s.style.background = ["#FFD43B", "#FF9ACB", "#8C7BFF", "#ffffff"][i % 4];
+      s.style.background = ["#E9BE5A", "#E4646B", "#C8323C", "#ffffff"][i % 4];
       document.body.appendChild(s);
       s.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
         { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(.2)`, opacity: 0 }],
@@ -292,7 +415,7 @@
   const puffs = (x, y, toCreative) => {
     smoke.innerHTML = "";
     /* tinted, see-through fog so the site stays visible while it changes */
-    const cols = toCreative ? ["255,255,255", "201,204,255", "255,154,203", "255,212,59", "140,123,255"]
+    const cols = toCreative ? ["255,255,255", "207,227,214", "228,100,107", "233,190,90", "200,50,60"]
                             : ["255,255,255", "201,218,210", "215,157,50", "236,238,232", "31,94,78"];
     const W = innerWidth, H = innerHeight, small = W < 560, n = small ? 9 : 14;
     for (let i = 0; i < n; i++) {
@@ -314,8 +437,8 @@
     const swap = () => {
       root.dataset.look = toCreative ? "creative" : "irish";
       magic.setAttribute("aria-pressed", String(toCreative));
-      magic.title = toCreative ? "Back to the calm look" : "Switch the site to our creative studio look";
-      meta.setAttribute("content", toCreative ? "#2A35E8" : "#14463A");
+      magic.title = toCreative ? "Back to the everyday look" : "Switch the site to our Christmas studio look";
+      meta.setAttribute("content", toCreative ? "#12402F" : "#14463A");
     };
     if (reduced) { swap(); return; }
     busy = true;
