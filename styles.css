@@ -280,13 +280,16 @@ section{padding-block:clamp(60px,8vw,104px)}
 .work__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
 .work h2 i{font-style:normal;color:var(--brand-2);background:linear-gradient(transparent 68%,var(--hl) 68%)}
 [data-look="creative"] .work h2 i{color:var(--card-fg);background:var(--accent);padding:0 .12em;border-radius:.12em}
-.reel__nav{display:flex;gap:10px}
-.reel__btn{width:52px;height:52px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;background:transparent;color:var(--brand);
-  box-shadow:inset 0 0 0 1.5px currentColor;transition:background .2s,color .2s}
-.reel__btn svg{width:22px;height:22px}
-.reel__btn:hover{background:var(--brand);color:var(--brand-fg)}
-[data-look="creative"] .reel__btn{background:var(--brand);color:var(--brand-fg);box-shadow:var(--btn-shadow)}
-.reel{--film:#1C1915;--hole:var(--bg);--ink:#F4ECDD;--edge:#D2AE62;margin-top:36px}
+.reel__nav{position:absolute;inset:0;pointer-events:none;z-index:2}
+.reel__btn{position:absolute;top:50%;width:56px;height:56px;margin-top:-28px;border-radius:50%;border:0;cursor:pointer;pointer-events:auto;display:grid;place-items:center;
+  background:rgba(255,255,255,.94);color:#16211D;box-shadow:0 8px 24px -6px rgba(0,0,0,.55),0 0 0 2px var(--edge);transition:transform .2s,opacity .25s,background .2s}
+.reel__btn svg{width:24px;height:24px}
+.reel__btn:hover{background:#fff;transform:scale(1.08)}
+.reel__btn--prev{left:max(12px,calc((100vw - 1140px) / 2 - 8px))}
+.reel__btn--next{right:max(12px,calc((100vw - 1140px) / 2 - 8px))}
+.reel__btn[disabled]{opacity:0;pointer-events:none}
+[data-look="creative"] .reel__btn{background:var(--brand);color:var(--brand-fg);box-shadow:4px 4px 0 #120F2E,0 0 0 2px #120F2E}
+.reel{position:relative;--film:#1C1915;--hole:var(--bg);--ink:#F4ECDD;--edge:#D2AE62;margin-top:36px}
 [data-look="creative"] .reel{--film:#120F2E;--ink:#FFFFFF;--edge:#FFD43B;transform:rotate(-1.4deg);margin-inline:-24px}
 .reel__track{list-style:none;margin:0;display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;
   background:var(--film);padding-inline:max(16px,calc((100vw - 1140px) / 2 + 16px));scroll-padding-inline:max(16px,calc((100vw - 1140px) / 2 + 16px));
@@ -319,7 +322,7 @@ section{padding-block:clamp(60px,8vw,104px)}
 .reel .frame:focus-within{z-index:1}
 .reel__track{--ring:#FFFFFF}
 .work__foot{margin-top:36px}
-@media (max-width:560px){.frame{width:64vw}.reel__nav{display:none}}
+@media (max-width:560px){.frame{width:64vw}.reel__btn{width:46px;height:46px;margin-top:-23px}.reel__btn svg{width:20px;height:20px}}
 
 /* Cinema frame: the chosen ad, enlarged on a strip of film */
 .cine{border:0;padding:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:transparent;color:#F4ECDD;overflow:hidden;--ring:#FFFFFF}
