@@ -116,6 +116,18 @@ html:has(dialog[open]){overflow:hidden}
 html[data-look="creative"] .cine::backdrop{background:radial-gradient(ellipse at 50% 38%,rgba(23,82,60,.95),rgba(10,24,19,.98) 70%)}
 /* /XMAS */
 
+/* XMAS: muted Christmas sticky notes in the film strip, each a different soft colour, with a little holly or snowflake */
+html[data-look="creative"] .frame .frame__note{--paper:#EFE6D2;--paper-2:#E2D6BC;color:#2A2B24}
+html[data-look="creative"] .frame:nth-child(4n+2) .frame__note{--paper:#DCE5D6;--paper-2:#CBD8C3}
+html[data-look="creative"] .frame:nth-child(4n+3) .frame__note{--paper:#EBD6D2;--paper-2:#DFC4BF}
+html[data-look="creative"] .frame:nth-child(4n) .frame__note{--paper:#ECE2C2;--paper-2:#DED2AC}
+html[data-look="creative"] .frame .frame__note::after{content:"";position:absolute;right:7px;bottom:6px;width:18px;height:18px;opacity:.55;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 9C7 4 3 6 2 3c3 0 3 3 6 2C6 8 9 9 10 9zM10 9c3-5 7-3 8-6-3 0-3 3-6 2 2 3-1 4-2 4z' fill='%235E7F62'/%3E%3Ccircle cx='8.6' cy='11.6' r='1.9' fill='%23B5585C'/%3E%3Ccircle cx='11.6' cy='12.2' r='1.9' fill='%23B5585C'/%3E%3C/svg%3E") center/contain no-repeat}
+html[data-look="creative"] .frame:nth-child(odd) .frame__note::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg stroke='%237E8E96' stroke-width='1.4' stroke-linecap='round' fill='none'%3E%3Cpath d='M0-9V9M-7.8-4.5 7.8 4.5M-7.8 4.5 7.8-4.5M-2.5-7 0-4.6 2.5-7M-2.5 7 0 4.6 2.5 7'/%3E%3C/g%3E%3C/svg%3E")}
+html[data-look="creative"] .frame .frame__note::before{background:rgba(176,72,76,.32)}
+html[data-look="creative"] .frame:nth-child(3n+1) .frame__note::before{background:rgba(94,127,98,.34)}
+/* /XMAS */
+
 /* Ticker */
 /* Classic Black Friday bar: black with gold, in both looks. Kept slim and
    outlined so the header's solid "Order a video" stays the main button. */
@@ -373,11 +385,25 @@ section{padding-block:clamp(60px,8vw,104px)}
   box-shadow:0 8px 24px -6px rgba(0,0,0,.5);transform:scale(.9);opacity:.88;transition:transform .3s,opacity .3s}
 .frame__play::after{content:"";position:absolute;left:23px;top:18px;border-left:17px solid #16211D;border-block:11px solid transparent}
 .frame__pic:hover .frame__play,.frame__pic:focus-visible .frame__play{transform:scale(1);opacity:1}
-.frame__note{margin:0;font:500 21px/1.12 "Caveat","Segoe Print","Bradley Hand",cursive;color:var(--ink);opacity:.94;min-height:3.4em}
+/* Each note is written on a sticky note, stuck onto the film just under its picture */
+.frame .frame__note{--paper:#F3E6BF;--paper-2:#EAD9A6;--tilt:-2.2deg;position:relative;z-index:2;align-self:center;width:88%;min-height:0;
+  margin:-30px 0 0;padding:16px 14px 14px;pointer-events:none;
+  font:500 20px/1.12 "Caveat","Segoe Print","Bradley Hand",cursive;color:#2C2A22;opacity:1;
+  background:linear-gradient(176deg,var(--paper) 0 72%,var(--paper-2));
+  border-radius:2px 2px 3px 14px/2px 2px 3px 8px;transform:rotate(var(--tilt));
+  box-shadow:0 1px 1px rgba(0,0,0,.18),0 10px 14px -8px rgba(0,0,0,.6),inset 0 -10px 14px -12px rgba(110,80,20,.35)}
+/* a strip of tape across the top */
+.frame .frame__note::before{content:"";position:absolute;left:50%;top:-9px;width:58px;height:20px;transform:translateX(-50%) rotate(3deg);
+  background:rgba(250,246,234,.55);box-shadow:0 0 0 1px rgba(255,255,255,.18);backdrop-filter:blur(1px);
+  -webkit-mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent 0);mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent 0)}
+.frame:nth-child(3n+2) .frame__note{--tilt:1.8deg}
+.frame:nth-child(3n) .frame__note{--tilt:-.8deg}
+.frame:nth-child(4n) .frame__note{--tilt:2.6deg}
+.frame:nth-child(even) .frame__note::before{transform:translateX(-50%) rotate(-4deg);left:44%}
 .frame__no{position:absolute;top:27px;right:12px;font:600 10px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--edge);opacity:.75}
 [data-look="creative"] .frame__title b{font-size:20px;text-transform:uppercase}
 [data-look="creative"] .frame__pic{border-radius:10px;box-shadow:0 0 0 3px var(--edge)}
-[data-look="creative"] .frame__note{color:#F6C9C6}
+[data-look="creative"] .frame .frame__note{color:#2C2A22}
 .reel .frame:focus-within{z-index:1}
 .reel__track{--ring:#FFFFFF}
 .work__foot{margin-top:36px}
