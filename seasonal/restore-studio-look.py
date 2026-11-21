@@ -6,7 +6,7 @@ pink) on 20 Nov 2026. The original is kept two ways:
 
 1. Git: commit e66642a on main is the whole site just before the change.
 2. This script: it swaps the Christmas colours back to the original ones and
-   removes the snow and the "Nollaig Shona" line, without touching anything
+   removes the snow, garlands, trees, stockings, music and the "Nollaig Shona" line, without touching anything
    else that changed since (new videos, prices, texts stay as they are).
 
 Run from the site folder:   python3 seasonal/restore-studio-look.py
@@ -31,9 +31,15 @@ def recolour(s):
     return s
 
 
+XMAS_HTML = re.compile(r"[ \t]*<!-- XMAS -->.*?<!-- /XMAS -->\n?", re.S)
+XMAS_CODE = re.compile(r"[ \t]*/\* XMAS.*?/\* /XMAS \*/\n?", re.S)
+
 for name in ("styles.css", "script.js", "index.html"):
     p = ROOT / name
-    s = recolour(p.read_text(encoding="utf-8"))
+    s = p.read_text(encoding="utf-8")
+    # Christmas-only decorations and music are wrapped in XMAS markers
+    s = XMAS_HTML.sub("", s) if name == "index.html" else XMAS_CODE.sub("", s)
+    s = recolour(s)
     if name == "index.html":
         s = s.replace('<div class="snow studio-only" aria-hidden="true"></div>\n', "")
         s = s.replace('<span class="xmas studio-only">Nollaig Shona ·</span>', "")

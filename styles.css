@@ -91,6 +91,30 @@ html:has(dialog[open]){overflow:hidden}
 [data-look="creative"] #site{position:relative;z-index:1}
 .xmas{color:#F6C9C6;font-family:var(--display);letter-spacing:.02em}
 
+/* XMAS: Christmas decorations for the Magic look (removed by seasonal/restore-studio-look.py) */
+.sign+.xtree{width:20px;height:25px;flex:none;margin-left:-14px;align-self:center;filter:drop-shadow(0 0 6px rgba(233,190,90,.55))}
+.garland{position:absolute;left:0;right:0;top:0;width:100%;height:96px;pointer-events:none;opacity:.72;z-index:0}
+.garland--work{height:80px;opacity:.4}
+.work{position:relative}
+.xf{transform-box:fill-box;transform-origin:50% 0;animation:xsway 5s ease-in-out infinite}
+.xf1{animation-duration:6.5s;animation-delay:-2s}.xf2{animation-duration:4.2s;animation-delay:-1s}
+@keyframes xsway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.xbg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.xbg svg{position:absolute;bottom:0;opacity:.09}
+.xbg__tree{right:2vw;width:min(300px,30vw);height:auto}
+.xbg__socks{left:3vw;bottom:auto!important;top:28vh;width:min(230px,22vw);height:auto;opacity:.07!important}
+.music{position:fixed;z-index:55;right:max(14px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:7px;
+  border:0;border-radius:99px;padding:10px 14px;cursor:pointer;background:rgba(14,33,26,.82);color:#F4ECDD;font:600 14px/1 var(--sans);
+  box-shadow:0 0 0 1.5px rgba(233,190,90,.7),0 8px 20px -8px rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+.music svg{width:18px;height:18px}
+.music .music__x{display:none}
+.music[aria-pressed="false"] .music__x{display:block}
+.music[aria-pressed="true"] svg{animation:xbeat 1.1s ease-in-out infinite}
+@keyframes xbeat{50%{transform:scale(1.15)}}
+@media (max-width:560px){.xbg__tree{width:44vw;opacity:.07}.xbg__socks{display:none}.garland{height:64px}.music{bottom:max(16px,env(safe-area-inset-bottom,0px));right:auto;left:80px}}
+@media (prefers-reduced-motion:reduce){.xf,.music svg{animation:none!important}}
+/* /XMAS */
+
 /* Ticker */
 /* Classic Black Friday bar: black with gold, in both looks. Kept slim and
    outlined so the header's solid "Order a video" stays the main button. */
