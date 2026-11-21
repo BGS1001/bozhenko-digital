@@ -46,9 +46,9 @@
   <div class="wrap top__row">
     <a class="sign" href="#top"><b>Bozhenko Digital</b><small>Limerick</small></a><!-- XMAS --><svg class="xtree studio-only" viewBox="0 0 24 30" aria-hidden="true"><path d="M12 1.5l1.1 2.3 2.5.3-1.8 1.7.5 2.5L12 7.1 9.7 8.3l.5-2.5-1.8-1.7 2.5-.3z" fill="#E9BE5A"/><path d="M12 7l5 6h-2.6l4.6 5.5h-2.8l5 6H2.8l5-6H5L9.6 13H7z" fill="#2E7D55"/><circle cx="9.5" cy="16" r="1.1" fill="#E4646B"/><circle cx="14.8" cy="19.5" r="1.1" fill="#E9BE5A"/><circle cx="11" cy="21.8" r="1" fill="#fff"/><circle cx="13.4" cy="12.6" r="1" fill="#E4646B"/><rect x="10.5" y="24.5" width="3" height="4" rx=".6" fill="#8A5A3B"/></svg><!-- /XMAS -->
     <nav class="nav" id="nav" aria-label="Main">
-      <a href="#how">How it works</a><a href="#prices">Prices</a><a href="#work">Work</a><a href="#extras">Extras</a><a href="#answers">Answers</a>
+      <a href="#how">How it works</a><a href="#prices">Prices</a><a href="#work">Work</a><a href="#extras">Extras</a><a href="#answers">Answers</a><a class="nav__order" href="#order" data-order="single">Order a video →</a>
     </nav>
-    <button class="btn btn--accent btn--sm" type="button" data-order="single">Order a video</button>
+    <button class="btn btn--accent btn--sm" type="button" data-order="single">Order<span class="xs-hide"> a video</span></button>
     <button class="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span></span><span></span></button>
   </div>
 </header>
@@ -113,7 +113,7 @@
       <li><h3>We build your ad</h3><p>We pick your strongest material and shape it around a current, proven ad format, with captions, music and your offer.</p></li>
       <li><h3>Check your inbox</h3><p>Your finished draft arrives within 24–72 hours. You only pay once you’ve received it.</p></li>
     </ol>
-    <p class="after">That’s it, really.</p>
+    <p class="after">That’s it, really. <button class="go" type="button" data-order="single">Start your order<svg class="go__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></p>
   </div>
 </section>
 
@@ -144,6 +144,7 @@
     </div>
   </div>
   <div class="wrap work__foot">
+    <p class="work__go">Fancy one for your own business? <button class="go" type="button" data-order="single">Order your video<svg class="go__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></p>
     <p class="formats-h">Formats we build on</p>
     <ul class="formats"><li>Before → After</li><li>Customer reacts</li><li>3 reasons locals love us</li><li>Wait for the end…</li><li>Day in the life</li><li>Quick-cut showcase</li></ul>
   </div>
@@ -160,6 +161,7 @@
       <div><b>Trades</b><span>Finished jobs and happy customers.</span></div>
       <div><b>Events</b><span>Setups, parties and celebrations.</span></div>
     </div>
+    <p class="who__go">Whatever the trade, if you have a few photos and a page, we can make your ad. <button class="go" type="button" data-order="single">Let’s make yours<svg class="go__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></p>
   </div>
 </section>
 
@@ -184,6 +186,7 @@
       <details><summary>Which formats do you deliver?</summary><p>Vertical 9:16 for Reels, TikTok and Stories as standard. 4:5 and 1:1 for feed ads on request.</p></details>
       <details><summary>What’s in the 4 and 8 business Reels packs?</summary><p>Separate ads for your key dates and sales, for example Black Friday, Christmas, the January sales, Paddy’s Day or your own promotions. You choose the occasions.</p></details>
       <details><summary>Can you run the ads for me as well?</summary><p>We can, if that would help: Meta, Google and TikTok campaigns, set up and looked after. See <a href="#extras">Extras</a> and request a quote.</p></details>
+      <p class="answers__go">Anything else on your mind? <a href="https://wa.me/353873714022" target="_blank" rel="noopener">Ask us on WhatsApp</a>, or <button class="go" type="button" data-order="single">go ahead and order<svg class="go__a" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></p>
     </div>
   </div>
 </section>
@@ -269,13 +272,13 @@
       <div class="choices" data-plan-choices></div>
     </fieldset>
     <fieldset class="fields">
-      <legend>2. Your details</legend>
+      <legend>2. Your details <small>(so we can send you the draft)</small></legend>
       <label class="f"><span>WhatsApp number *</span><input name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+353 87 123 4567" required></label>
       <label class="f"><span>Email *</span><input name="email" type="email" autocomplete="email" placeholder="you@business.ie" required></label>
-      <label class="f f--wide"><span>Your website or Instagram / TikTok / Facebook page *</span><input name="business" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="yourbusiness.ie or instagram.com/yourbusiness" required></label>
+      <label class="f f--wide"><span>Your website or Instagram / TikTok / Facebook page * <small>(that’s where we take your photos and clips from)</small></span><input name="business" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="yourbusiness.ie or instagram.com/yourbusiness" required></label>
     </fieldset>
     <fieldset class="fields">
-      <legend>3. About the video</legend>
+      <legend>3. About the video <small>(optional)</small></legend>
       <label class="f f--wide"><span>Which events or sales is it for?</span><input name="events" type="text" placeholder="e.g. Black Friday, Christmas sale"></label>
       <label class="f"><span>Where will it run?</span><input name="platform" type="text" placeholder="e.g. Instagram Reels"></label>
       <label class="f"><span>When do you need it?</span><input name="date" type="date"></label>
@@ -317,6 +320,7 @@
       <video controls playsinline preload="none"></video>
     </div>
     <p class="cine__note" data-cine-note></p>
+    <button class="cine__order" type="button" data-order="single">Order one like this <span>· from €33</span></button>
     <div class="cine__ctrl">
       <button class="cine__btn" type="button" data-cine-step="-1" aria-label="Previous ad"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <span class="cine__count" data-cine-count></span>

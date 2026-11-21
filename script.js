@@ -224,6 +224,7 @@
     const o = e.target.closest("[data-order]");
     if (o) {
       e.preventDefault(); closeNav();
+      if (lb.open) lb.close();
       const r = $(`input[name="package"][value="${o.dataset.order}"]`, oform); if (r) r.checked = true;
       updateTotal(); if (!order.open) order.showModal();
     }
