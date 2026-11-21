@@ -31,9 +31,11 @@ window.SITE = {
   /* --- Extra services (each gets a "Request a quote" button; featured: true = highlighted card) --- */
   extras: [
     { id: "landing", name: "Websites for every business", featured: true, text: "From a simple one-page site to a full shop or booking site: fast, easy to use on a phone and built to bring in enquiries. Cafés, trades, salons, shops, and personal projects too." },
+    { id: "seo",     name: "SEO setup for your website", text: "We set your site up properly for Google: page titles and descriptions, speed, structure, local keywords and Search Console, so people nearby can find you. Steady, honest work rather than quick tricks." },
     { id: "shoot",   name: "Video & photo shoot",     text: "Would you like fresh footage as well? We can arrange a video or photo shoot for your business, priced to the job." },
     { id: "meta",    name: "Meta ads management",     text: "Facebook & Instagram campaign setup, targeting and ongoing optimisation." },
     { id: "google",  name: "Google Ads & Maps",       text: "Search and local campaigns that put you in front of nearby customers." },
+    { id: "chatgpt", name: "Advertising in ChatGPT",  text: "More people now ask ChatGPT where to go and what to buy. Where ChatGPT ads are available, we set them up and look after them, and we help your business come across clearly when people ask AI assistants for local recommendations." },
     { id: "gbp",     name: "Google Business Profile", text: "Setup and optimisation, so you show up properly on Google Search and Maps." },
     { id: "tiktok",  name: "TikTok ads",              text: "Campaign setup and management built around short-form video." }
   ],
