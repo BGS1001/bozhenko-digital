@@ -293,15 +293,13 @@ section{padding-block:clamp(60px,8vw,104px)}
 .work__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
 .work h2 i{font-style:normal;color:var(--brand-2);background:linear-gradient(transparent 68%,var(--hl) 68%)}
 [data-look="creative"] .work h2 i{color:var(--card-fg);background:var(--accent);padding:0 .12em;border-radius:.12em}
-.reel__nav{position:absolute;inset:0;pointer-events:none;z-index:2}
-.reel__btn{position:absolute;top:50%;width:56px;height:56px;margin-top:-28px;border-radius:50%;border:0;cursor:pointer;pointer-events:auto;display:grid;place-items:center;
-  background:rgba(255,255,255,.94);color:#16211D;box-shadow:0 8px 24px -6px rgba(0,0,0,.55),0 0 0 2px var(--edge);transition:transform .2s,opacity .25s,background .2s}
-.reel__btn svg{width:24px;height:24px}
+.reel__nav{position:absolute;left:50%;bottom:18px;transform:translate(-50%,50%);z-index:2;display:flex;gap:14px;pointer-events:none}
+.reel__btn{width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;pointer-events:auto;display:grid;place-items:center;
+  background:rgba(255,255,255,.96);color:#16211D;box-shadow:0 6px 18px -6px rgba(0,0,0,.6),0 0 0 2px var(--edge);transition:transform .2s,opacity .25s,background .2s}
+.reel__btn svg{width:22px;height:22px}
 .reel__btn:hover{background:#fff;transform:scale(1.08)}
-.reel__btn--prev{left:max(12px,calc((100vw - 1140px) / 2 - 8px))}
-.reel__btn--next{right:max(12px,calc((100vw - 1140px) / 2 - 8px))}
-.reel__btn[disabled]{opacity:0;pointer-events:none}
-[data-look="creative"] .reel__btn{background:var(--brand);color:var(--brand-fg);box-shadow:4px 4px 0 #0E211A,0 0 0 2px #0E211A}
+.reel__btn[disabled]{opacity:.4;cursor:default;transform:none}
+[data-look="creative"] .reel__btn{background:var(--brand);color:var(--brand-fg);box-shadow:3px 3px 0 #0E211A,0 0 0 2px #0E211A}
 .reel{position:relative;--film:#1C1915;--hole:var(--bg);--ink:#F4ECDD;--edge:#D2AE62;margin-top:36px}
 [data-look="creative"] .reel{--film:#0E211A;--ink:#FFFFFF;--edge:#E9BE5A;transform:rotate(-1.4deg);margin-inline:-24px}
 .reel__track{list-style:none;margin:0;display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;
@@ -316,6 +314,25 @@ section{padding-block:clamp(60px,8vw,104px)}
 .frame::before,.frame::after{content:"";position:absolute;left:0;right:0;height:12px;
   background:repeating-linear-gradient(90deg,transparent 0 7px,var(--hole) 7px 17px,transparent 17px 24px)}
 .frame::before{top:12px}.frame::after{bottom:12px}
+/* Worn film: fine scratches, dust and scuffs, as if the reel has been through the projector many times.
+   They sit on each frame (so they travel with the film) and lightly over each picture. */
+.frame{background-image:
+    linear-gradient(90deg,transparent 0 17%,rgba(255,255,255,.12) 17% 17.4%,transparent 17.4% 58%,rgba(255,255,255,.09) 58% 58.25%,transparent 58.25% 83%,rgba(0,0,0,.35) 83% 83.5%,transparent 83.5%),
+    radial-gradient(ellipse 60% 18% at 30% 72%,rgba(255,255,255,.045),transparent 70%),
+    radial-gradient(ellipse 40% 12% at 75% 20%,rgba(0,0,0,.3),transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 14 0 0 0 -11.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:100% 100%,100% 100%,100% 100%,220px 220px}
+.frame:nth-child(3n+2){background-position:37px 0,0 0,0 0,90px 40px}
+.frame:nth-child(3n){background-position:-61px 0,0 0,0 0,160px 120px}
+.frame:nth-child(4n+1){background-position:22px 0,0 0,0 0,30px 170px}
+.frame__pic::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.7;mix-blend-mode:screen;
+  background:linear-gradient(90deg,transparent 0 31%,rgba(255,255,255,.22) 31% 31.3%,transparent 31.3% 76%,rgba(255,255,255,.12) 76% 76.2%,transparent 76.2%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 14 0 0 0 -11.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/220px 220px}
+.frame__pic::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.35;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12 0 0 -9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/260px 260px}
+.frame:nth-child(odd) .frame__pic::after{background-position:63px 0,40px 90px}
+.frame:nth-child(3n) .frame__pic::after{background-position:-48px 0,140px 30px}
+/* sprocket holes a little uneven, like old stock */
+.frame:nth-child(even)::before{opacity:.92}.frame:nth-child(3n)::after{opacity:.85}
+.frame__play{z-index:2}
 .frame__title{margin:0;display:flex;flex-direction:column;gap:2px;min-height:3.4em;justify-content:flex-end}
 .frame__title b{font:var(--h-weight) 19px/1.15 var(--display);letter-spacing:var(--h-track);color:var(--ink)}
 .frame__title span{font:700 11px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--edge)}
@@ -335,7 +352,7 @@ section{padding-block:clamp(60px,8vw,104px)}
 .reel .frame:focus-within{z-index:1}
 .reel__track{--ring:#FFFFFF}
 .work__foot{margin-top:36px}
-@media (max-width:560px){.frame{width:64vw}.reel__btn{width:46px;height:46px;margin-top:-23px}.reel__btn svg{width:20px;height:20px}}
+@media (max-width:560px){.frame{width:64vw}.reel__btn{width:44px;height:44px}.reel__btn svg{width:20px;height:20px}}
 
 /* Cinema frame: the chosen ad, enlarged on a strip of film */
 .cine{border:0;padding:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:transparent;color:#F4ECDD;overflow:hidden;--ring:#FFFFFF}
