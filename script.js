@@ -59,7 +59,7 @@
       <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
       <button class="card__hit" type="button" data-card-hit="${i}"><span class="sr"></span></button>
       <span class="card__play" aria-hidden="true">▶ Watch with sound</span>
-      <span class="card__hand card__hand--a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span><span class="card__hand card__hand--b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
+      <span class="card__hand card__hand--a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 14a8 8 0 0 1-8 8"/><path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1"/><path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
     </div>`;
   }).join("");
   const cardOf = i => $(`[data-card="${i}"]`, cardsEl);
@@ -430,9 +430,28 @@
     const g = document.createElement("b"); const url = grainTile(); if (url) g.style.backgroundImage = `url(${url})`;
     smoke.appendChild(g);
   };
+  /* XMAS: Christmas music for the Magic look (removed by seasonal/restore-studio-look.py).
+     Our own music-box arrangement of "Jingle Bells" (Pierpont, 1857, public domain).
+     It only starts after a click on Magic, plays softly, and the Music button mutes it. */
+  const musicBtn = $("[data-music]");
+  let tune = null;
+  const musicWanted = () => store.get("bd_music") !== "off";
+  const setMusicUi = on => { musicBtn.setAttribute("aria-pressed", String(on)); $("[data-music-label]").textContent = on ? "Music on" : "Music off"; };
+  const playTune = () => {
+    if (!tune) { tune = new Audio("assets/christmas-music-box.mp3"); tune.loop = true; tune.volume = .32; tune.preload = "auto"; }
+    tune.play().then(() => setMusicUi(true)).catch(() => setMusicUi(false));
+  };
+  const stopTune = () => { if (tune) tune.pause(); setMusicUi(false); };
+  musicBtn.addEventListener("click", () => {
+    if (tune && !tune.paused) { stopTune(); store.set("bd_music", "off"); }
+    else { store.set("bd_music", "on"); playTune(); }
+  });
+  setMusicUi(false);
+  /* /XMAS */
   magic.addEventListener("click", () => {
     if (busy) return;
     const toCreative = root.dataset.look !== "creative";
+    /* XMAS */ if (toCreative && musicWanted()) playTune(); else if (!toCreative) stopTune(); /* /XMAS */
     const r = magic.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
     const swap = () => {
       root.dataset.look = toCreative ? "creative" : "irish";
