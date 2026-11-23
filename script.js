@@ -244,9 +244,19 @@
   });
   [order, quote].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
   lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("cine__stage")) lb.close(); });
+  /* After a successful order or quote request: the thank-you stays up for a few
+     seconds (or until the visitor closes it), then the site casts itself into the
+     Magic look as a little celebration. Nothing extra happens if it is already Magic. */
+  let celebrate = 0;
   [order, quote].forEach(d => d.addEventListener("close", () => {
-    const f = $("form", d); if (f.classList.contains("is-sent")) { f.classList.remove("is-sent"); $("[data-status]", f).innerHTML = ""; }
+    clearTimeout(celebrate);
+    const f = $("form", d);
+    if (f.classList.contains("is-sent")) {
+      f.classList.remove("is-sent"); $("[data-status]", f).innerHTML = "";
+      if (root.dataset.look !== "creative") setTimeout(() => $("[data-magic]").click(), 350);
+    }
   }));
+  const thankThenMagic = form => { clearTimeout(celebrate); celebrate = setTimeout(() => { const d = form.closest("dialog"); if (d && d.open) d.close(); }, 5000); };
   const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
   oform.date.min = today.toISOString().slice(0, 10);
 
@@ -316,7 +326,7 @@
         const { res, out } = r;
         if (!res.ok || String(out.success) === "false") throw new Error(out.message || ("HTTP " + res.status));
         status.innerHTML = `<div class="msg msg--ok" tabindex="-1">${ok}<div class="msg__alts"><button class="btn btn--sm" type="button" data-close>Close</button></div></div>`;
-        form.classList.add("is-sent"); $(".msg", status).focus();
+        form.classList.add("is-sent"); $(".msg", status).focus(); thankThenMagic(form);
         form.querySelectorAll("input:not([type=radio]),textarea").forEach(i => { if (i.type === "checkbox") i.checked = false; else i.value = ""; });
       } catch (err) {
         const reason = err instanceof TypeError ? "network or browser blocked the request" : String(err?.message || "");
@@ -334,7 +344,7 @@
       const p = pkgs.find(x => x.id === d.package);
       return [`New video order — ${p ? `${p.name} ${eur(p.price)} (was ${eur(p.was)})` : d.package}`, `WhatsApp: ${d.whatsapp}`, `Email: ${d.email}`,
         `Business: ${d.business}`, d.events && `Events: ${d.events}`, d.platform && `Platform: ${d.platform}`, d.date && `Needed by: ${d.date}`,
-        d.extras_interest && "Also wants a quote for extras"].filter(Boolean).join("\n");
+        d.extras_interest && "Also wants a quote for extras", d.notes && `Notes: ${d.notes}`].filter(Boolean).join("\n");
     },
     ok: "<b>Thank you, we’ve got your order.</b> We’ll be in touch on WhatsApp or email shortly to confirm the details.",
     after: updateTotal

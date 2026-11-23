@@ -436,7 +436,23 @@ section{padding-block:clamp(60px,8vw,104px)}
 .reel .frame:focus-within{z-index:1}
 .reel__track{--ring:#FFFFFF}
 .work__foot{margin-top:36px}
-@media (max-width:560px){.frame{width:64vw}.reel__btn{width:44px;height:44px}.reel__btn svg{width:20px;height:20px}}
+/* Phones: a compact film strip, two frames across with a peek of the third */
+@media (max-width:560px){
+  html .reel .frame{width:42vw;gap:6px;padding:28px 7px 34px}
+  html .reel .frame::before,html .reel .frame::after{height:8px;background:repeating-linear-gradient(90deg,transparent 0 5px,var(--hole) 5px 12px,transparent 12px 17px)}
+  html .reel .frame::before{top:9px}html .reel .frame::after{bottom:9px}
+  html .reel .frame__title{min-height:2.7em;gap:1px}
+  html .reel .frame__title b{font-size:14px;line-height:1.12}
+  html .reel .frame__title span{font-size:8.5px;letter-spacing:.1em}
+  html .reel .frame__no{top:19px;right:7px;font-size:8px}
+  html .reel .frame__play{width:40px;height:40px;margin:-20px 0 0 -20px}
+  html .reel .frame__play::after{left:16px;top:12px;border-left-width:12px;border-block-width:8px}
+  html .reel .frame .frame__note{width:92%;margin-top:-18px;padding:11px 8px 9px;font-size:15px;line-height:1.08}
+  html .reel .frame .frame__note::before{width:40px;height:14px;top:-7px}
+  html .reel .frame .frame__note::after{width:12px;height:12px;right:4px;bottom:4px}
+  .reel__btn{width:40px;height:40px}.reel__btn svg{width:18px;height:18px}
+  .reel__nav{bottom:14px}
+}
 
 /* Cinema frame: the chosen ad, enlarged on a strip of film */
 .cine{border:0;padding:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:transparent;color:#F4ECDD;overflow:hidden;--ring:#FFFFFF}
