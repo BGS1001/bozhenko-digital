@@ -199,6 +199,23 @@ html[data-look="creative"] .frame:nth-child(3n+1) .frame__note::before{backgroun
 @keyframes hotPulse{0%{box-shadow:0 0 0 0 rgba(224,83,61,.5)}70%,100%{box-shadow:0 0 0 7px rgba(224,83,61,0)}}
 @media (prefers-reduced-motion:reduce){.hot__dot{animation:none}}
 @media (max-width:420px){.hot{font-size:13px;padding:5px 12px 5px 9px}}
+/* Hero breathing room */
+.hero h1{line-height:1.1}
+[data-look="creative"] .hero h1{line-height:1.14}
+.hero .lead{margin-top:24px}
+@media (max-width:560px){
+  .hero{padding-top:44px}
+  .hero__eyebrow{margin-bottom:20px}
+  .hero__eyebrow .eb-txt,.hero__eyebrow .eb-sep{display:none}  /* the badge below already says what we sell */
+  .hot{margin-bottom:22px}
+  .hero .lead{margin:26px 0 28px}
+  .hero .offer{margin-bottom:28px}
+  /* floating buttons: one compact row along the bottom edge */
+  .magic{top:auto!important;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:none!important}
+  .music{padding:0;width:46px;height:46px;justify-content:center;border-radius:50%}
+  .music [data-music-label]{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  body{padding-bottom:84px}
+}
 .hero h1 i{font-style:normal;color:var(--brand-2);background:linear-gradient(transparent 68%,var(--hl) 68%)}
 [data-look="creative"] .hero h1 i{color:var(--card-fg);background:var(--accent);padding:0 .12em;border-radius:.12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 [data-look="creative"] .hero h1 .h1a{color:transparent;-webkit-text-stroke:2px var(--fg)}
