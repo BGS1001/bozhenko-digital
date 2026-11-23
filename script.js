@@ -107,8 +107,14 @@
       <span class="frame__no" aria-hidden="true">${String(i + 1).padStart(2, "0")}${i % 2 ? "A" : ""} ▸</span>
     </li>`).join("");
   $$("[data-reel-step]").forEach(b => b.addEventListener("click", () => {
-    const f = $(".frame", reel), step = f ? f.getBoundingClientRect().width * 2 : 400;
-    reel.scrollBy({ left: +b.dataset.reelStep * step, behavior: reduced ? "auto" : "smooth" });
+    /* one press moves the film by exactly one frame */
+    const frames = $$(".frame", reel); if (!frames.length) return;
+    const base = reel.getBoundingClientRect().left + (parseFloat(getComputedStyle(reel).scrollPaddingInlineStart) || 0);
+    const off = f => f.getBoundingClientRect().left - base;
+    let cur = 0;
+    frames.forEach((f, i) => { if (Math.abs(off(f)) < Math.abs(off(frames[cur]))) cur = i; });
+    const n = Math.max(0, Math.min(frames.length - 1, cur + +b.dataset.reelStep));
+    reel.scrollTo({ left: reel.scrollLeft + off(frames[n]), behavior: reduced ? "auto" : "smooth" });
   }));
   /* hide an arrow when the film is already at that end */
   const ends = () => {
