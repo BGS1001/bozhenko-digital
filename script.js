@@ -294,11 +294,29 @@
       }
       btn.disabled = true; const label = btn.innerHTML; btn.textContent = "Sending…"; status.innerHTML = "";
       try {
-        const res = await fetch(S.formEndpoint, {
-          method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ ...data, _subject: subj, _template: "table", _captcha: "false", message: text })
-        });
-        const out = await res.json().catch(() => ({}));
+        /* The mail relay can be slow (30-40 s) and now and then answers with a
+           temporary "Server Error". Keep the customer informed, and retry once. */
+        const slow = setTimeout(() => { status.innerHTML = `<div class="msg">Still sending, this can take up to a minute. Please keep this window open.</div>`; }, 6000);
+        const payload = JSON.stringify({ ...data, _subject: subj, _template: "table", _captcha: "false", message: text });
+        const send = async () => {
+          const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 75000);
+          try {
+            const res = await fetch(S.formEndpoint, { method: "POST", signal: ctl.signal,
+              headers: { "Content-Type": "application/json", Accept: "application/json" }, body: payload });
+            const out = await res.json().catch(() => ({}));
+            return { res, out };
+          } finally { clearTimeout(t); }
+        };
+        let r;
+        try {
+          r = await send();
+          const temp = !r.res.ok && r.res.status >= 500 || /server error/i.test(r.out.message || "");
+          if (temp) { await new Promise(w => setTimeout(w, 1500)); r = await send(); }
+        } catch (netErr) {
+          if (netErr?.name === "AbortError") throw new Error("the connection timed out");
+          throw netErr;
+        } finally { clearTimeout(slow); }
+        const { res, out } = r;
         if (!res.ok || String(out.success) === "false") throw new Error(out.message || ("HTTP " + res.status));
         status.innerHTML = `<div class="msg msg--ok" tabindex="-1">${ok}<div class="msg__alts"><button class="btn btn--sm" type="button" data-close>Close</button></div></div>`;
         form.classList.add("is-sent"); $(".msg", status).focus();
