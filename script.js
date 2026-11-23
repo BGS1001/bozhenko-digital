@@ -288,17 +288,17 @@
       if (form._gotcha.value) return;
       const data = Object.fromEntries(new FormData(form)); delete data._gotcha;
       const text = summary(data), subj = subject(data);
-      if (!S.formEndpoint || location.protocol === "file:") {
+      if (!S.formEndpoint || !S.formKey || location.protocol === "file:") {
         status.innerHTML = `<div class="msg msg--err"><b>The form only sends from the live website.</b> Your request was not sent. You can send it directly:${altLinks(text, subj)}</div>`;
         return;
       }
       btn.disabled = true; const label = btn.innerHTML; btn.textContent = "Sending…"; status.innerHTML = "";
       try {
-        /* The mail relay can be slow (30-40 s). Keep the customer informed. */
-        const slow = setTimeout(() => { status.innerHTML = `<div class="msg">Still sending, this can take up to a minute or two. Please keep this window open.</div>`; }, 6000);
-        const payload = JSON.stringify({ ...data, _subject: subj, _template: "table", _captcha: "false", message: text });
+        /* Keep the customer informed if sending is slow. */
+        const slow = setTimeout(() => { status.innerHTML = `<div class="msg">Still sending, this can take a few more seconds. Please keep this window open.</div>`; }, 6000);
+        const payload = JSON.stringify({ access_key: S.formKey, subject: subj, from_name: "Bozhenko Digital website", replyto: data.email, ...data, message: text, botcheck: "" });
         const send = async () => {
-          const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 115000);
+          const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 45000);
           try {
             const res = await fetch(S.formEndpoint, { method: "POST", signal: ctl.signal,
               headers: { "Content-Type": "application/json", Accept: "application/json" }, body: payload });
@@ -308,7 +308,7 @@
         };
         let r;
         try {
-          r = await send(); // /api/order already retries the mail service itself
+          r = await send();
         } catch (netErr) {
           if (netErr?.name === "AbortError") throw new Error("the connection timed out");
           throw netErr;

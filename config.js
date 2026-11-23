@@ -12,12 +12,12 @@ window.SITE = {
   facebook: "",          // full URL
 
   /* --- Where order requests go ---
-     Uses FormSubmit (free): orders arrive by email. The very first order sends an
-     activation email to that address — click the link in it once, after that
-     every order arrives in the inbox.
-     Until this is set, the form says plainly that it could not be sent
+     Uses Web3Forms (free): orders arrive by email at the address the access key
+     was created for. The key is public by design (it can only send to that inbox).
+     Until it is set, the form says plainly that it could not be sent
      and offers WhatsApp / email instead. It never shows a fake "sent". */
-  formEndpoint: "/api/order",   // relays to FormSubmit -> bozhenkodigital@gmail.com (see api/order.js)
+  formEndpoint: "https://api.web3forms.com/submit",
+  formKey: "",   // Web3Forms access key
 
   /* --- Black Friday offer --- */
   offerEnds: "2026-11-30T23:59:00", // countdown target; set "" to hide the countdown
