@@ -17,7 +17,7 @@ window.SITE = {
      Until it is set, the form says plainly that it could not be sent
      and offers WhatsApp / email instead. It never shows a fake "sent". */
   formEndpoint: "https://api.web3forms.com/submit",
-  formKey: "",   // Web3Forms access key
+  formKey: "f00be1de-2e9f-4080-b24d-fb8151c61de7",   // Web3Forms access key (public by design)
 
   /* --- Black Friday offer --- */
   offerEnds: "2026-11-30T23:59:00", // countdown target; set "" to hide the countdown
