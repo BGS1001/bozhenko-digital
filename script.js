@@ -344,7 +344,7 @@
       const p = pkgs.find(x => x.id === d.package);
       return [`New video order — ${p ? `${p.name} ${eur(p.price)} (was ${eur(p.was)})` : d.package}`, `WhatsApp: ${d.whatsapp}`, `Email: ${d.email}`,
         `Business: ${d.business}`, d.events && `Events: ${d.events}`, d.platform && `Platform: ${d.platform}`, d.date && `Needed by: ${d.date}`,
-        d.extras_interest && "Also wants a quote for extras"].filter(Boolean).join("\n");
+        d.extras_interest && "Also wants a quote for extras", d.notes && `Notes: ${d.notes}`].filter(Boolean).join("\n");
     },
     ok: "<b>Thank you, we’ve got your order.</b> We’ll be in touch on WhatsApp or email shortly to confirm the details.",
     after: updateTotal
