@@ -161,9 +161,10 @@ html[data-look="creative"] .frame:nth-child(3n+1) .frame__note::before{backgroun
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--band);color:var(--band-hi)}
 [data-look="creative"] .top{background:var(--bg);color:var(--fg)}
 .top__row{display:flex;align-items:center;gap:24px;padding-block:12px}
-.sign{display:flex;align-items:baseline;gap:10px;text-decoration:none;white-space:nowrap}
+.sign{display:grid;grid-template-columns:auto auto;justify-content:start;align-items:baseline;column-gap:10px;row-gap:4px;text-decoration:none;white-space:nowrap}
 .sign b{font:var(--h-weight) 23px/1 var(--display);letter-spacing:var(--h-track)}
 .sign small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.sign__exp{grid-column:1/-1;font-size:12px;line-height:1.2;letter-spacing:.02em;opacity:.72}
 .nav{margin-left:auto;display:flex;gap:22px;font-size:15px}
 .nav a{text-decoration:none;opacity:.85}.nav a:hover{opacity:1}
 .burger{display:none;background:none;border:0;width:40px;height:40px;cursor:pointer;flex-direction:column;justify-content:center;gap:6px;padding:8px;color:inherit}
@@ -181,7 +182,7 @@ html[data-look="creative"] .frame:nth-child(3n+1) .frame__note::before{backgroun
 @media (max-width:560px){.top__row{gap:14px}}
 @media (max-width:400px){.top__row{gap:10px}.sign+.xtree{margin-left:-6px}}
 @media (max-width:380px){.xs-hide{display:none}}
-@media (max-width:420px){.top .btn{padding:10px 12px;font-size:14px}.sign b{font-size:20px}}
+@media (max-width:420px){.top .btn{padding:10px 12px;font-size:14px}.sign b{font-size:20px}.sign__exp{font-size:10.5px;letter-spacing:0}}
 
 /* Hero */
 .hero{position:relative;padding-block:clamp(36px,4.5vw,64px) clamp(40px,5vw,72px);overflow:hidden}
