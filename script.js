@@ -294,12 +294,11 @@
       }
       btn.disabled = true; const label = btn.innerHTML; btn.textContent = "Sending…"; status.innerHTML = "";
       try {
-        /* The mail relay can be slow (30-40 s) and now and then answers with a
-           temporary "Server Error". Keep the customer informed, and retry once. */
-        const slow = setTimeout(() => { status.innerHTML = `<div class="msg">Still sending, this can take up to a minute. Please keep this window open.</div>`; }, 6000);
+        /* The mail relay can be slow (30-40 s). Keep the customer informed. */
+        const slow = setTimeout(() => { status.innerHTML = `<div class="msg">Still sending, this can take up to a minute or two. Please keep this window open.</div>`; }, 6000);
         const payload = JSON.stringify({ ...data, _subject: subj, _template: "table", _captcha: "false", message: text });
         const send = async () => {
-          const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 75000);
+          const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 115000);
           try {
             const res = await fetch(S.formEndpoint, { method: "POST", signal: ctl.signal,
               headers: { "Content-Type": "application/json", Accept: "application/json" }, body: payload });
@@ -309,9 +308,7 @@
         };
         let r;
         try {
-          r = await send();
-          const temp = !r.res.ok && r.res.status >= 500 || /server error/i.test(r.out.message || "");
-          if (temp) { await new Promise(w => setTimeout(w, 1500)); r = await send(); }
+          r = await send(); // /api/order already retries the mail service itself
         } catch (netErr) {
           if (netErr?.name === "AbortError") throw new Error("the connection timed out");
           throw netErr;

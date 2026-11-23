@@ -17,7 +17,7 @@ window.SITE = {
      every order arrives in the inbox.
      Until this is set, the form says plainly that it could not be sent
      and offers WhatsApp / email instead. It never shows a fake "sent". */
-  formEndpoint: "https://formsubmit.co/ajax/bozhenkodigital@gmail.com",
+  formEndpoint: "/api/order",   // relays to FormSubmit -> bozhenkodigital@gmail.com (see api/order.js)
 
   /* --- Black Friday offer --- */
   offerEnds: "2026-11-30T23:59:00", // countdown target; set "" to hide the countdown
