@@ -352,7 +352,7 @@
   /* ---------- Structured data for Google (built from config.js) ---------- */
   const ld = {
     "@context": "https://schema.org", "@type": "ProfessionalService", name: "Bozhenko Digital",
-    description: "Short ad videos for Instagram, TikTok and Facebook, made from a business's existing reviews, photos and clips.",
+    description: "Video production and digital marketing studio in Limerick: short ad videos for Instagram, TikTok and Facebook made from a business's existing reviews, photos and clips, plus websites, SEO and ad management.",
     url: (S.siteUrl || location.origin) + "/", image: (S.siteUrl || location.origin) + "/assets/og.jpg",
     address: { "@type": "PostalAddress", addressLocality: "Limerick", addressCountry: "IE" },
     areaServed: { "@type": "Country", name: "Ireland" }, priceRange: pkgs.length ? `€${Math.min(...pkgs.map(p => p.price))}–€${Math.max(...pkgs.map(p => p.price))}` : undefined,

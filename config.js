@@ -30,7 +30,7 @@ window.SITE = {
 
   /* --- Extra services (each gets a "Request a quote" button; featured: true = highlighted card) --- */
   extras: [
-    { id: "landing", name: "Websites for every business", featured: true, text: "From a simple one-page site to a full shop or booking site: fast, easy to use on a phone and built to bring in enquiries. Cafés, trades, salons, shops, and personal projects too." },
+    { id: "landing", name: "Websites for every business", featured: true, text: "From a simple one-page site to a full shop or booking site: fast, easy to use on a phone and built to bring in enquiries. Cafés, trades, salons and shops." },
     { id: "seo",     name: "SEO setup for your website", text: "We set your site up properly for Google: page titles and descriptions, speed, structure, local keywords and Search Console, so people nearby can find you. Steady, honest work rather than quick tricks." },
     { id: "shoot",   name: "Video & photo shoot",     text: "Would you like fresh footage as well? We can arrange a video or photo shoot for your business, priced to the job." },
     { id: "meta",    name: "Meta ads management",     text: "Facebook & Instagram campaign setup, targeting and ongoing optimisation." },
@@ -65,7 +65,7 @@ window.SITE = {
       note: "Celtic legends from the Aran Islands. We gave the designs room, and a bit of starlight.",
       video: "assets/work/lia-arann-christmas.mp4", poster: "assets/work/lia-arann-christmas.webp", preview: "assets/work/lia-arann-christmas-preview.mp4" },
     { name: "Lia Árann", place: "Aran Islands", tag: "Green Friday",
-      note: "A Green Friday, not a Black one: buy one thing that lasts. Glad to tell it.",
+      note: "A Green Friday, not a Black one: buy one thing that lasts. We were glad to tell it.",
       video: "assets/work/lia-arann-greenfriday.mp4", poster: "assets/work/lia-arann-greenfriday.webp" },
     { name: "Mezze", place: "Tramore", tag: "Black Friday",
       note: "Spice boxes and hampers in their own sunny orange. Pure joy to cut.",
