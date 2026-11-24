@@ -198,7 +198,8 @@ html[data-look="creative"] .frame:nth-child(3n+1) .frame__note::before{backgroun
 .hot__dot{flex:none;width:9px;height:9px;border-radius:50%;background:#E0533D;box-shadow:0 0 0 0 rgba(224,83,61,.5);animation:hotPulse 2.4s ease-out infinite}
 @keyframes hotPulse{0%{box-shadow:0 0 0 0 rgba(224,83,61,.5)}70%,100%{box-shadow:0 0 0 7px rgba(224,83,61,0)}}
 @media (prefers-reduced-motion:reduce){.hot__dot{animation:none}}
-@media (max-width:420px){.hot{font-size:13px;padding:5px 12px 5px 9px}}
+@media (max-width:480px){.hot{border-radius:16px}.hot b{display:block}}
+@media (max-width:420px){.hot{font-size:13px}}
 /* Hero breathing room */
 .hero h1{line-height:1.1}
 [data-look="creative"] .hero h1{line-height:1.14}
