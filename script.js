@@ -203,6 +203,26 @@
     }
   } else { $("[data-deck]").closest(".hero__media").hidden = true; }
 
+  /* ---------- Hand-made touches: pen scribbles drawn on scroll, notes and stamps ---------- */
+  const SCRIB = {
+    u: ["0 0 200 24", "M4 13C52 7 120 5 196 9M26 19c46-4 98-5 146-2"],
+    w: ["0 0 200 20", "M3 12q12-10 24 0t24 0 24 0 24 0 24 0 24 0 24 0 24 0"],
+    c: ["0 0 200 80", "M146 9C104-1 30 4 11 28-4 48 30 74 98 74s102-14 97-38C190 13 138 3 64 12"]
+  };
+  $$(".scrib").forEach(el => {
+    const k = SCRIB[el.dataset.scrib] ? el.dataset.scrib : "u", [vb, d] = SCRIB[k];
+    el.classList.add("scrib--" + k);
+    el.insertAdjacentHTML("beforeend", `<svg class="scrib__svg" viewBox="${vb}" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="${d}"/></svg>`);
+  });
+  const drawables = $$(".scrib,.hand,.stamp");
+  if (reduced || !("IntersectionObserver" in window)) drawables.forEach(el => el.classList.add("is-drawn"));
+  else {
+    const io = new IntersectionObserver(ens => ens.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add("is-drawn"); io.unobserve(en.target); }
+    }), { rootMargin: "0px 0px -8% 0px", threshold: .5 });
+    drawables.forEach(el => io.observe(el));
+  }
+
   /* ---------- Ticker pause (moving content must be stoppable) ---------- */
   const tk = $("[data-ticker]"), tkp = $("[data-ticker-pause]");
   const setPaused = on => {

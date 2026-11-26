@@ -691,3 +691,98 @@ legend{font-weight:700;margin-bottom:10px;padding:0}
 }
 @media (max-width:340px){.top__row{gap:8px}.sign{column-gap:7px}.sign b{font-size:18px}.sign__mark{width:28px;height:30px}.top .btn{padding:9px 10px}}
 @media (max-width:370px){.top__row .xtree{display:none!important}}
+
+/* ===== Hand-made touches (both looks) =====
+   1 self-drawing marker scribbles  2 handwritten notes with arrows
+   3 paper / film grain             4 inked rubber stamps
+   5 taped index cards (steps)      6 torn paper edges
+   All decorative: aria-hidden, pointer-events off, still under prefers-reduced-motion. */
+:root{--scrib:var(--accent);--hand:#2F5A4D;--ink:#1F5E4E;
+  --torn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 16' preserveAspectRatio='none'%3E%3Cpath d='M0 16L0 8 L6 11.6 L17 7.5 L23 4.9 L29 7.8 L35 10.9 L40 7.5 L47 3.9 L52 9.0 L63 12.6 L69 9.5 L75 3.2 L81 3.6 L86 4.9 L93 9.0 L104 6.3 L110 11.4 L116 5.3 L125 8.0 L130 7.6 L139 7.1 L145 13.0 L150 10.1 L159 10.6 L165 5.9 L170 8.6 L175 7.0 L184 6.9 L189 11.5 L194 5.1 L199 7.7 L210 7.2 L216 9.3 L225 6.4 L234 6.3 L245 10.6 L250 4.3 L255 3.1 L266 11.0 L273 9.8 L280 7.5 L287 12.9 L294 7.2 L305 4.2 L316 12.9 L321 5.7 L327 6.0 L332 5.1 L343 13.0 L349 9.4 L354 3.4 L361 5.1 L370 3.1 L376 6.3 L385 6.9 L390 3.9 L396 9.4 L400 8 L400 16Z' fill='%23FBFCF9'/%3E%3Cpath d='M0 8 L6 11.6 L17 7.5 L23 4.9 L29 7.8 L35 10.9 L40 7.5 L47 3.9 L52 9.0 L63 12.6 L69 9.5 L75 3.2 L81 3.6 L86 4.9 L93 9.0 L104 6.3 L110 11.4 L116 5.3 L125 8.0 L130 7.6 L139 7.1 L145 13.0 L150 10.1 L159 10.6 L165 5.9 L170 8.6 L175 7.0 L184 6.9 L189 11.5 L194 5.1 L199 7.7 L210 7.2 L216 9.3 L225 6.4 L234 6.3 L245 10.6 L250 4.3 L255 3.1 L266 11.0 L273 9.8 L280 7.5 L287 12.9 L294 7.2 L305 4.2 L316 12.9 L321 5.7 L327 6.0 L332 5.1 L343 13.0 L349 9.4 L354 3.4 L361 5.1 L370 3.1 L376 6.3 L385 6.9 L390 3.9 L396 9.4 L400 8' fill='none' stroke='%23D2D9CF' stroke-width='1.2' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+--torn-c:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 16' preserveAspectRatio='none'%3E%3Cpath d='M0 16L0 8 L6 11.6 L17 7.5 L23 4.9 L29 7.8 L35 10.9 L40 7.5 L47 3.9 L52 9.0 L63 12.6 L69 9.5 L75 3.2 L81 3.6 L86 4.9 L93 9.0 L104 6.3 L110 11.4 L116 5.3 L125 8.0 L130 7.6 L139 7.1 L145 13.0 L150 10.1 L159 10.6 L165 5.9 L170 8.6 L175 7.0 L184 6.9 L189 11.5 L194 5.1 L199 7.7 L210 7.2 L216 9.3 L225 6.4 L234 6.3 L245 10.6 L250 4.3 L255 3.1 L266 11.0 L273 9.8 L280 7.5 L287 12.9 L294 7.2 L305 4.2 L316 12.9 L321 5.7 L327 6.0 L332 5.1 L343 13.0 L349 9.4 L354 3.4 L361 5.1 L370 3.1 L376 6.3 L385 6.9 L390 3.9 L396 9.4 L400 8 L400 16Z' fill='%23FFF8EC'/%3E%3C/svg%3E");}
+[data-look="creative"]{--scrib:#E9BE5A;--hand:#F6E7C8;--ink:#C8323C}
+
+/* 1. Marker scribbles: drawn with a pen once the heading scrolls into view */
+.scrib{position:relative;white-space:nowrap;z-index:0}
+.scrib__svg{position:absolute;z-index:-1;pointer-events:none;overflow:visible;fill:none;stroke:var(--scrib);stroke-linecap:round;stroke-linejoin:round}
+.scrib__svg path{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .9s cubic-bezier(.6,.1,.3,1) .25s}
+.scrib.is-drawn .scrib__svg path{stroke-dashoffset:0}
+.scrib--u .scrib__svg{left:-3%;width:106%;bottom:-.2em;height:.42em;stroke-width:4.5}
+.scrib--w .scrib__svg{left:-2%;width:104%;bottom:-.24em;height:.34em;stroke-width:4}
+.scrib--c .scrib__svg{left:-.32em;right:-.32em;width:calc(100% + .64em);top:-.16em;height:calc(100% + .32em);stroke-width:3.2}
+.work h2 i.scrib{background:none}
+[data-look="creative"] .work h2 i.scrib{background:var(--accent)}
+.close__box .scrib{--scrib:var(--accent)}
+[data-look="creative"] .close__box .scrib{--scrib:#12402F}
+[data-look="creative"] :is(.prices,.extras) .scrib{--scrib:#E4646B}
+
+/* 2. Handwritten notes in the margin, with a curly arrow */
+.hand{position:absolute;z-index:3;margin:0;display:flex;align-items:flex-start;gap:2px;pointer-events:none;
+  font:600 23px/1 "Caveat","Segoe Print","Bradley Hand",cursive;color:var(--hand);white-space:nowrap;
+  opacity:0;transform:translateY(6px) rotate(var(--r,-4deg));transition:opacity .6s ease .1s,transform .6s ease .1s}
+.hand.is-drawn{opacity:1;transform:rotate(var(--r,-4deg))}
+.hand__arrow{flex:none;width:44px;height:44px;margin-top:6px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.hand__arrow path{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .7s ease .55s}
+.hand.is-drawn .hand__arrow path{stroke-dashoffset:0}
+.hand.is-drawn .hand__arrow path+path{transition-delay:1.15s;transition-duration:.25s}
+.hand--deck{left:-6px;top:-42px;--r:-6deg}
+[data-look="creative"] .hand--deck{top:-30px;left:-34px}
+.plans-wrap{position:relative}
+.hand--pick{left:calc(50% + 20px);top:-46px;--r:-3deg;flex-direction:row-reverse}
+.hand--pick .hand__arrow{transform:scaleX(-1);margin-right:-6px}
+[data-look="creative"] .prices{--hand:#12402F}
+.work__head{position:relative}
+.hand--reel{right:max(16px,env(safe-area-inset-right,0px));bottom:-38px;--r:-3deg}
+@media (max-width:1100px){.hand--reel{display:none}}
+@media (max-width:860px){.hand--pick{display:none}}
+@media (max-width:880px){.hand--deck{display:none}}
+
+/* 3. Grain: fine paper texture on the everyday look, a gently moving film grain on Magic */
+.grain{position:fixed;inset:-10%;z-index:52;pointer-events:none;opacity:.045;animation:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2  0 0 0 0 .17  0 0 0 0 .12  0 0 0 1.4 -.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+[data-look="creative"] .grain{opacity:.07;animation:grain 1.2s steps(4) infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* 4. Rubber stamps, pressed on with a little thud */
+.stamp{display:block;color:var(--ink);font-family:var(--sans);pointer-events:none;opacity:0;transform:scale(1.7) rotate(-24deg)}
+.stamp.is-drawn{animation:stampIn .42s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes stampIn{0%{opacity:0;transform:scale(1.7) rotate(-24deg)}70%{opacity:.9}100%{opacity:.85;transform:scale(1) rotate(var(--sr,-12deg))}}
+.prices .wrap{position:relative}
+.stamp--pay{position:absolute;right:max(24px,env(safe-area-inset-right,0px));top:-14px;width:150px;height:150px;--sr:-12deg}
+@media (max-width:1000px){.stamp--pay{right:10px;top:-48px;width:112px;height:112px}}
+@media (max-width:560px){.stamp--pay{top:-58px;width:96px;height:96px}}
+.stamp--foot{display:inline-block;vertical-align:middle;width:72px;height:72px;margin:-24px 0 -24px 18px;--sr:10deg;color:var(--brand-2)}
+[data-look="creative"] .stamp--foot{color:#E9BE5A}
+
+/* 5. "How it works" steps as index cards, taped down, with a hand-circled number */
+.steps li{position:relative}
+.steps li::after{content:"";position:absolute;left:50%;top:-11px;width:86px;height:24px;transform:translateX(-50%) rotate(-3deg);
+  background:rgba(233,222,190,.78);box-shadow:0 1px 2px rgba(0,0,0,.08);
+  -webkit-mask:conic-gradient(from -45deg at left,#0000,#000 1deg 89deg,#0000 90deg) left/6px 6px repeat-y,conic-gradient(from 135deg at right,#0000,#000 1deg 89deg,#0000 90deg) right/6px 6px repeat-y,linear-gradient(#000 0 0) center/calc(100% - 12px) 100% no-repeat;
+  mask:conic-gradient(from -45deg at left,#0000,#000 1deg 89deg,#0000 90deg) left/6px 6px repeat-y,conic-gradient(from 135deg at right,#0000,#000 1deg 89deg,#0000 90deg) right/6px 6px repeat-y,linear-gradient(#000 0 0) center/calc(100% - 12px) 100% no-repeat}
+.steps li:nth-child(2)::after{transform:translateX(-50%) rotate(2.5deg);background:rgba(201,218,210,.85)}
+.steps li:nth-child(3)::after{left:56%;transform:translateX(-50%) rotate(-1.5deg)}
+.steps li:nth-child(1){transform:rotate(-.8deg)}
+.steps li:nth-child(3){transform:rotate(.6deg)}
+.steps li{box-shadow:0 1px 0 rgba(0,0,0,.04),0 14px 22px -18px rgba(20,40,30,.45)}
+[data-look="creative"] .steps li{box-shadow:var(--card-shadow)}
+[data-look="creative"] .steps li::after{background:rgba(255,248,236,.72)}
+.steps li::before{background:none!important;color:var(--brand)!important;font:700 30px/1 "Caveat","Segoe Print",cursive;width:48px;height:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 44'%3E%3Cpath d='M30 4C17 1 5 9 4 21s9 20 21 20 20-7 19-19C43 11 34 5 22 6' fill='none' stroke='%23D79D32' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")!important;background-size:100% 100%!important}
+[data-look="creative"] .steps li::before{color:#0E211A!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 44'%3E%3Cpath d='M30 4C17 1 5 9 4 21s9 20 21 20 20-7 19-19C43 11 34 5 22 6' fill='none' stroke='%230E211A' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")!important}
+
+/* 6. Torn paper edges on the light "paper" sections */
+.prices,.extras{position:relative;z-index:1;border-block:0}
+.prices::before,.prices::after,.extras::before,.extras::after{content:"";position:absolute;left:0;right:0;height:14px;pointer-events:none;
+  background:var(--torn) 0 0/400px 100% repeat-x}
+.prices::before,.extras::before{top:-13px}
+.prices::after,.extras::after{bottom:-13px;transform:scaleY(-1);background-position:173px 0}
+[data-look="creative"] :is(.prices,.extras)::before,[data-look="creative"] :is(.prices,.extras)::after{background-image:var(--torn-c)}
+
+@media (prefers-reduced-motion:reduce){
+  .scrib__svg path,.hand__arrow path{transition:none;stroke-dashoffset:0}
+  .hand{transition:none;opacity:1;transform:rotate(var(--r,-4deg))}
+  .stamp{opacity:.85;transform:rotate(var(--sr,-12deg));animation:none!important}
+  .grain{animation:none!important}
+}
